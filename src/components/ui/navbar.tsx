@@ -61,7 +61,9 @@ export function NavBar() {
                 <div className="flex-shrink-0">
                   <WalletButton />
                 </div>
-                <div className="flex-shrink-0">ClusterUiSelect</div>
+                <div className="flex-shrink-0">
+                  <ClusterUiSelect />
+                </div>
                 <div className="flex-shrink-0">
                   <ModeToggle />
                 </div>

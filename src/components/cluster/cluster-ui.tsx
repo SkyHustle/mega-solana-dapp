@@ -1,25 +1,38 @@
+"use client";
+import { useState } from "react";
 import { useCluster } from "./cluster-data-access";
+import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+type Checked = DropdownMenuCheckboxItemProps["checked"];
 
 export function ClusterUiSelect() {
+  const [showStatusBar, setShowStatusBar] = useState<Checked>(false);
   const { clusters, setCluster, cluster } = useCluster();
 
   return (
-    <div className="dropdown dropdown-end">
-      <label tabIndex={0} className="btn btn-primary rounded-btn">
-        {cluster.name}
-      </label>
-      <ul tabIndex={0} className="menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52 mt-4">
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline">{cluster.name}</Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56">
         {clusters.map((item) => (
-          <li key={item.name}>
-            <button
-              className={`btn btn-sm ${item.active ? "btn-primary" : "btn-ghost"}`}
-              onClick={() => setCluster(item)}
-            >
-              {item.name}
-            </button>
-          </li>
+          <DropdownMenuCheckboxItem
+            key={item.name}
+            checked={item.name === cluster.name ? true : false}
+            onCheckedChange={setShowStatusBar}
+            onClick={() => setCluster(item)}
+          >
+            {item.name}
+          </DropdownMenuCheckboxItem>
         ))}
-      </ul>
-    </div>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
