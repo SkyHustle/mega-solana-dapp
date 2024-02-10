@@ -76,12 +76,16 @@
 }
 
 .wallet-adapter-button-trigger {
-  background: rgb(151, 137, 209) !important;
+  background: hsl(var(--background)) !important;
+  color: hsl(var(--foreground)) !important;
   border-radius: 8px !important;
-  padding-left: 16px !important;
-  padding-right: 16px !important;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
 }
 .wallet-adapter-dropdown-list,
 .wallet-adapter-button {
   font-family: inherit !important;
+  font-size: 12px !important;
+  height: 2.5rem !important;
+  border: solid 1px hsl(var(--border)) !important;
 }
