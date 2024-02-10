@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ModeToggle } from "./mode-toggle";
+import { ClusterUiSelect } from "../cluster/cluster-ui";
 
 const pages: { label: string; path: string }[] = [
   { label: "Account", path: "/account" },
@@ -58,6 +59,7 @@ export function NavBar() {
               </div>
               <div className="flex items-center gap-2">
                 <div className="flex-shrink-0">WalletButton</div>
+                <div className="flex-shrink-0">ClusterUiSelect</div>
                 <div className="flex-shrink-0">
                   <ModeToggle />
                 </div>
