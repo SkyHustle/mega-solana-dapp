@@ -1,7 +1,7 @@
 "use client";
 import { Disclosure } from "@headlessui/react";
 import { X, Menu } from "lucide-react";
-// import { WalletButton } from "@/app/solana-provider";
+import { WalletButton } from "@/providers/solana-provider";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -58,7 +58,9 @@ export function NavBar() {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <div className="flex-shrink-0">WalletButton</div>
+                <div className="flex-shrink-0">
+                  <WalletButton />
+                </div>
                 <div className="flex-shrink-0">ClusterUiSelect</div>
                 <div className="flex-shrink-0">
                   <ModeToggle />

@@ -1,10 +1,12 @@
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/providers/theme-provider";
 import type { Metadata } from "next";
 import "./globals.css";
 import { Inter as FontSans } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { UiLayout } from "@/components/ui/ui-layout";
+import { SolanaProvider } from "@/providers/solana-provider";
+import { ClusterProvider } from "@/components/cluster/cluster-data-access";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -25,7 +27,11 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={cn("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <UiLayout>{children}</UiLayout>
+          <ClusterProvider>
+            <SolanaProvider>
+              <UiLayout>{children}</UiLayout>
+            </SolanaProvider>
+          </ClusterProvider>
           <SpeedInsights />
         </ThemeProvider>
       </body>
