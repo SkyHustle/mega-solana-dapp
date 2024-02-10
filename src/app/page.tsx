@@ -1,9 +1,5 @@
-import { ModeToggle } from "@/components/ui/mode-toggle";
+import DashboardFeature from "@/components/dashboard/dashboard-feature";
 
-export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <ModeToggle />
-    </main>
-  );
+export default function Page() {
+  return <DashboardFeature />;
 }
