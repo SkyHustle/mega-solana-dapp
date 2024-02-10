@@ -1,10 +1,11 @@
 "use client";
 import { Disclosure } from "@headlessui/react";
-// import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { X, Menu } from "lucide-react";
 // import { WalletButton } from "@/app/solana-provider";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ModeToggle } from "./mode-toggle";
 
 const pages: { label: string; path: string }[] = [
   { label: "Account", path: "/account" },
@@ -16,7 +17,7 @@ export function NavBar() {
   const pathname = usePathname();
 
   return (
-    <Disclosure as="nav" className="bg-white shadow">
+    <Disclosure as="nav" className="bg-background shadow">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -27,7 +28,11 @@ export function NavBar() {
                   <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                     <span className="absolute -inset-0.5" />
                     <span className="sr-only">Open main menu</span>
-                    {open ? <span>XMarkIcon</span> : <span>Bars3Icon</span>}
+                    {open ? (
+                      <X className="block h-6 w-6" aria-hidden="true" />
+                    ) : (
+                      <Menu className="block h-6 w-6" aria-hidden="true" />
+                    )}
                   </Disclosure.Button>
                 </div>
                 <div className="flex flex-shrink-0 items-center">
@@ -51,17 +56,10 @@ export function NavBar() {
                   ))}
                 </div>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-center gap-2">
                 <div className="flex-shrink-0">WalletButton</div>
-                <div className="hidden md:ml-4 md:flex md:flex-shrink-0 md:items-center">
-                  <button
-                    type="button"
-                    className="relative rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                  >
-                    <span className="absolute -inset-1.5" />
-                    <span className="sr-only">View notifications</span>
-                    BellIcon
-                  </button>
+                <div className="flex-shrink-0">
+                  <ModeToggle />
                 </div>
               </div>
             </div>
