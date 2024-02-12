@@ -4,6 +4,8 @@ import { PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { useMemo } from "react";
 import { useParams } from "next/navigation";
 import { useGetBalance } from "./account-data-access";
+import { Button } from "../ui/button";
+import { Droplet, Send, HandCoins } from "lucide-react";
 
 export default function AccountDetailFeature() {
   const params = useParams();
@@ -29,24 +31,18 @@ export default function AccountDetailFeature() {
           <AccountBalance address={address} />
           <p className="mt-2 leading-8 text-gray-500">Wallet Address</p>
           <div className="mt-4 flex items-center justify-center gap-x-6">
-            <a
-              href="#"
-              className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
+            <Button variant="outline" size="sm">
+              <Droplet className="h-5 w-5 pr-1" />
               Airdrop
-            </a>
-            <a
-              href="#"
-              className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
+            </Button>
+            <Button variant="outline" size="sm">
+              <Send className="h-5 w-5 pr-1" />
               Send
-            </a>
-            <a
-              href="#"
-              className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
+            </Button>
+            <Button variant="outline" size="sm">
+              <HandCoins className="h-5 w-5 pr-1" />
               Receive
-            </a>
+            </Button>
           </div>
         </div>
       </div>
