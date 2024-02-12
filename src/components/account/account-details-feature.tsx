@@ -1,8 +1,9 @@
 "use client";
 
-import { PublicKey } from "@solana/web3.js";
+import { PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { useMemo } from "react";
 import { useParams } from "next/navigation";
+import { useGetBalance } from "./account-data-access";
 
 export default function AccountDetailFeature() {
   const params = useParams();
@@ -25,7 +26,7 @@ export default function AccountDetailFeature() {
     <div className="relative isolate px-6 pt-14 lg:px-8">
       <div className="mx-auto max-w-2xl py-5 sm:py-8 lg:py-9">
         <div className="text-center">
-          <h1 className="text-1xl font-bold tracking-tight text-primary sm:text-2xl">SOL Balance: 4.567</h1>
+          <AccountBalance address={address} />
           <p className="mt-2 leading-8 text-gray-500">Wallet Address</p>
           <div className="mt-4 flex items-center justify-center gap-x-6">
             <a
@@ -61,6 +62,21 @@ export default function AccountDetailFeature() {
           }}
         />
       </div>
+    </div>
+  );
+}
+
+export function AccountBalance({ address }: { address: PublicKey }) {
+  const query = useGetBalance({ address });
+
+  return (
+    <div>
+      <h1
+        className="text-1xl font-bold tracking-tight text-primary sm:text-2xl cursor-pointer"
+        onClick={() => query.refetch()}
+      >
+        {query.data ? Math.round((query.data / LAMPORTS_PER_SOL) * 100000) / 100000 : "..."} SOL
+      </h1>
     </div>
   );
 }
