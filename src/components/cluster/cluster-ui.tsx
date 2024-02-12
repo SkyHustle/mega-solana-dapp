@@ -130,7 +130,7 @@ export function TableDemo() {
             <TableCell>{item.network ?? "custom"}</TableCell>
             <TableCell>{item.endpoint}</TableCell>
             <TableCell className="text-right">
-              <Trash2 className="h-6 w-6 float-end" />
+              <Trash2 className="h-5 w-5 float-end" />
             </TableCell>
           </TableRow>
         ))}
