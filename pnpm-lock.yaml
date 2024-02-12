@@ -29,6 +29,9 @@ dependencies:
   '@solana/wallet-adapter-solflare':
     specifier: ^0.6.28
     version: 0.6.28(@solana/web3.js@1.90.0)
+  '@tanstack/react-query':
+    specifier: ^5.20.2
+    version: 5.20.2(react@18.2.0)
   '@vercel/speed-insights':
     specifier: ^1.0.9
     version: 1.0.9(next@14.1.0)(react@18.2.0)
@@ -3022,6 +3025,19 @@ packages:
     resolution: {integrity: sha512-E4KcWTpoLHqwPHLxidpOqQbcrZVgi0rsmmZXUle1jXmJfuIf/UWpczUJ7MZZ5tlxytgJXyp0w4PGkkeLiuIdZw==}
     dependencies:
       tslib: 2.6.2
+    dev: false
+
+  /@tanstack/query-core@5.20.2:
+    resolution: {integrity: sha512-sAILwNiyA1I52e6imOsmNDUA/PuOayOzqz5jcLiIB5wBXqVk+HIiriWouPcAkjS8RqARfHUehuoPwcZ7Uzh0GQ==}
+    dev: false
+
+  /@tanstack/react-query@5.20.2(react@18.2.0):
+    resolution: {integrity: sha512-949myvMY77cPqwb71m3wRG2ypgwPijshO5kN9w0CDKWrFC0X8Wh1mwSqst88kIr58tWlWNsGy3U40AK23RgYQA==}
+    peerDependencies:
+      react: ^18.0.0
+    dependencies:
+      '@tanstack/query-core': 5.20.2
+      react: 18.2.0
     dev: false
 
   /@tanstack/react-virtual@3.0.4(react-dom@18.2.0)(react@18.2.0):
