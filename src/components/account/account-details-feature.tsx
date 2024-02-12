@@ -1,11 +1,11 @@
 "use client";
 
 import { PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import { useGetBalance } from "./account-data-access";
 import { Button } from "../ui/button";
-import { Droplet, Send, HandCoins } from "lucide-react";
+import { Droplet, Send, HandCoins, Check } from "lucide-react";
 import { ExplorerLink } from "../cluster/cluster-ui";
 import { ellipsify } from "@/components/ui/ui-layout";
 
@@ -70,6 +70,24 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export function ReceiveModal({ address }: { address: PublicKey }) {
+  const [isCopied, setIsCopied] = useState(false);
+
+  async function copyToClipboard(text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+      setIsCopied(true);
+      console.log(`Copied ${text} to clipboard`);
+      // wait 2 seconds and then reset the button
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 1000);
+      // alert("Copied to clipboard"); // Optionally, show some feedback
+      // Toast this shit!
+    } catch (err) {
+      console.error("Failed to copy: ", err);
+    }
+  }
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -89,7 +107,11 @@ export function ReceiveModal({ address }: { address: PublicKey }) {
           </div>
           <Button type="submit" size="sm" className="px-3">
             <span className="sr-only">Copy</span>
-            <Copy className="h-4 w-4" />
+            {isCopied ? (
+              <Check className="h-4 w-4" />
+            ) : (
+              <Copy className="h-4 w-4" onClick={() => copyToClipboard(address.toString())} />
+            )}
           </Button>
         </div>
         <DialogFooter className="sm:justify-start">
