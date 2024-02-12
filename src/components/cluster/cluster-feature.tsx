@@ -1,4 +1,4 @@
-import { ClusterUiTable, TableDemo } from "./cluster-ui";
+import { ClusterUiTable } from "./cluster-ui";
 
 export default function ClusterFeature() {
   return (
@@ -10,7 +10,6 @@ export default function ClusterFeature() {
         </div>
       </div>
       <ClusterUiTable />
-      <TableDemo />
     </div>
   );
 }
