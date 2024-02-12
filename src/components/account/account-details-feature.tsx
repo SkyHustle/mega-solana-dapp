@@ -4,10 +4,10 @@ import { PublicKey } from "@solana/web3.js";
 import { useMemo } from "react";
 import { useParams } from "next/navigation";
 import { Button } from "../ui/button";
-import { Droplet, Send, HandCoins } from "lucide-react";
+import { Droplet, Send } from "lucide-react";
 import { ExplorerLink } from "../cluster/cluster-ui";
 import { ellipsify } from "@/components/ui/ui-layout";
-import { AccountBalance, ReceiveModal } from "./account-ui";
+import { AccountBalance, ReceiveModal, SendModal } from "./account-ui";
 
 export default function AccountDetailFeature() {
   const params = useParams();
@@ -40,10 +40,7 @@ export default function AccountDetailFeature() {
               Airdrop
             </Button>
 
-            <Button variant="outline" size="sm">
-              <Send className="h-5 w-5 pr-1" />
-              Send
-            </Button>
+            <SendModal />
 
             <ReceiveModal address={address} />
           </div>

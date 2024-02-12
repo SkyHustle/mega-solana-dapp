@@ -2,7 +2,7 @@ import { PublicKey } from "@solana/web3.js";
 import { useState } from "react";
 import { useGetBalance } from "./account-data-access";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
-import { Check, Copy, HandCoins } from "lucide-react";
+import { Check, Copy, HandCoins, Send } from "lucide-react";
 import {
   Dialog,
   DialogClose,
@@ -61,7 +61,7 @@ export function ReceiveModal({ address }: { address: PublicKey }) {
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Share Address</DialogTitle>
+          <DialogTitle>Receive</DialogTitle>
           <DialogDescription>Share your address to request funds</DialogDescription>
         </DialogHeader>
         <div className="flex items-center space-x-2">
@@ -84,6 +84,72 @@ export function ReceiveModal({ address }: { address: PublicKey }) {
           <DialogClose asChild>
             <Button type="button" variant="secondary">
               Close
+            </Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+export function SendModal() {
+  const [destination, setDestination] = useState("");
+  const [amount, setAmount] = useState("");
+
+  async function handleSend() {
+    console.log(`Send ${amount} to ${destination}`);
+  }
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="sm">
+          <Send className="h-5 w-5 pr-1" />
+          Send
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Send</DialogTitle>
+          <DialogDescription>Send Sol to anyone on the network</DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="address" className="text-right">
+              Address
+            </Label>
+            <Input
+              id="address"
+              placeholder="Ex7...Qc3"
+              className="col-span-3"
+              value={destination}
+              onChange={(e) => setDestination(e.target.value)}
+            />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="amount" className="text-right">
+              Amount
+            </Label>
+            <Input
+              type="number"
+              step="any"
+              id="amount"
+              placeholder="amount"
+              className="col-span-3"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button type="button" variant="secondary">
+              Close
+            </Button>
+          </DialogClose>
+          <DialogClose asChild>
+            <Button type="submit" onClick={handleSend}>
+              Send
             </Button>
           </DialogClose>
         </DialogFooter>
