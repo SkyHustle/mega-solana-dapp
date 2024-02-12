@@ -6,6 +6,8 @@ import { useParams } from "next/navigation";
 import { useGetBalance } from "./account-data-access";
 import { Button } from "../ui/button";
 import { Droplet, Send, HandCoins } from "lucide-react";
+import { ExplorerLink } from "../cluster/cluster-ui";
+import { ellipsify } from "@/components/ui/ui-layout";
 
 export default function AccountDetailFeature() {
   const params = useParams();
@@ -29,7 +31,9 @@ export default function AccountDetailFeature() {
       <div className="mx-auto max-w-2xl py-5 sm:py-8 lg:py-9">
         <div className="text-center">
           <AccountBalance address={address} />
-          <p className="mt-2 leading-8 text-gray-500">Wallet Address</p>
+          <p className="mt-2 leading-8 text-gray-500">
+            <ExplorerLink path={`account/${address}`} label={ellipsify(address.toString())} />
+          </p>
           <div className="mt-4 flex items-center justify-center gap-x-6">
             <Button variant="outline" size="sm">
               <Droplet className="h-5 w-5 pr-1" />

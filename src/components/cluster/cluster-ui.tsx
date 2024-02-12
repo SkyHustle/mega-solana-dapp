@@ -14,6 +14,21 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 
 type Checked = DropdownMenuCheckboxItemProps["checked"];
 
+export function ExplorerLink({ path, label, className }: { path: string; label: string; className?: string }) {
+  const { getExplorerUrl } = useCluster();
+
+  return (
+    <a
+      href={getExplorerUrl(path)}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={className ? className : `link hover:text-purple-500`}
+    >
+      {label}
+    </a>
+  );
+}
+
 export function ClusterUiSelect() {
   const [showStatusBar, setShowStatusBar] = useState<Checked>(false);
   const { clusters, setCluster, cluster } = useCluster();
