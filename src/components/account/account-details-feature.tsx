@@ -4,10 +4,9 @@ import { PublicKey } from "@solana/web3.js";
 import { useMemo } from "react";
 import { useParams } from "next/navigation";
 import { Button } from "../ui/button";
-import { Droplet } from "lucide-react";
 import { ExplorerLink } from "../cluster/cluster-ui";
 import { ellipsify } from "@/components/ui/ui-layout";
-import { AccountBalance, ReceiveModal, SendModal } from "./account-ui";
+import { AccountBalance, AirdropModal, ReceiveModal, SendModal } from "./account-ui";
 
 export default function AccountDetailFeature() {
   const params = useParams();
@@ -35,10 +34,7 @@ export default function AccountDetailFeature() {
             <ExplorerLink path={`account/${address}`} label={ellipsify(address.toString())} />
           </p>
           <div className="mt-4 flex items-center justify-center gap-x-6">
-            <Button variant="outline" size="sm">
-              <Droplet className="h-5 w-5 pr-1" />
-              Airdrop
-            </Button>
+            <AirdropModal address={address} />
 
             <SendModal address={address} />
 

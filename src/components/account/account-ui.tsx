@@ -1,8 +1,8 @@
 import { PublicKey } from "@solana/web3.js";
 import { useEffect, useState } from "react";
-import { useGetBalance, useTransferSol } from "./account-data-access";
+import { useRequestAirdrop, useGetBalance, useTransferSol } from "./account-data-access";
 import { LAMPORTS_PER_SOL, PUBLIC_KEY_LENGTH } from "@solana/web3.js";
-import { Check, Copy, HandCoins, Send } from "lucide-react";
+import { Check, Copy, HandCoins, Send, Droplet } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -189,6 +189,59 @@ export function SendModal({ address }: { address: PublicKey }) {
               )}
             </Tooltip>
           </TooltipProvider>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+export function AirdropModal({ address }: { address: PublicKey }) {
+  const [amount, setAmount] = useState("1");
+  const mutation = useRequestAirdrop({ address });
+
+  function handleSubmit() {
+    console.log(`Airdrop ${amount} to ${address}`);
+    mutation.mutateAsync(parseFloat(amount)).then(() => setAmount("1"));
+  }
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="sm">
+          <Droplet className="h-5 w-5 pr-1" />
+          Airdrop
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Airdrop</DialogTitle>
+          <DialogDescription>Request Airdrop</DialogDescription>
+        </DialogHeader>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="amount" className="text-right">
+            Amount
+          </Label>
+          <Input
+            type="number"
+            step="any"
+            id="amount"
+            placeholder="amount"
+            className="col-span-3"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+          />
+        </div>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button type="button" variant="secondary">
+              Close
+            </Button>
+          </DialogClose>
+          <DialogClose asChild>
+            <Button type="submit" onClick={handleSubmit}>
+              Submit
+            </Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>
