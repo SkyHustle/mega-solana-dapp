@@ -4,7 +4,7 @@ import { PublicKey } from "@solana/web3.js";
 import { useMemo } from "react";
 import { useParams } from "next/navigation";
 import { Button } from "../ui/button";
-import { Droplet, Send } from "lucide-react";
+import { Droplet } from "lucide-react";
 import { ExplorerLink } from "../cluster/cluster-ui";
 import { ellipsify } from "@/components/ui/ui-layout";
 import { AccountBalance, ReceiveModal, SendModal } from "./account-ui";
@@ -40,7 +40,7 @@ export default function AccountDetailFeature() {
               Airdrop
             </Button>
 
-            <SendModal />
+            <SendModal address={address} />
 
             <ReceiveModal address={address} />
           </div>

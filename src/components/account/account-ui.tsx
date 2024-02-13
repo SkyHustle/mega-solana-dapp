@@ -1,6 +1,6 @@
 import { PublicKey } from "@solana/web3.js";
 import { useState } from "react";
-import { useGetBalance } from "./account-data-access";
+import { useGetBalance, useTransferSol } from "./account-data-access";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { Check, Copy, HandCoins, Send } from "lucide-react";
 import {
@@ -92,12 +92,27 @@ export function ReceiveModal({ address }: { address: PublicKey }) {
   );
 }
 
-export function SendModal() {
+export function SendModal({ address }: { address: PublicKey }) {
   const [destination, setDestination] = useState("");
   const [amount, setAmount] = useState("");
 
-  async function handleSend() {
+  const mutation = useTransferSol({ address });
+
+  function handleSend() {
     console.log(`Send ${amount} to ${destination}`);
+    // do some input checks, fire off toast if invalid
+
+    // Mega Happy Path
+    mutation
+      .mutateAsync({
+        destination: new PublicKey(destination),
+        amount: parseFloat(amount),
+      })
+      .then(() => {
+        console.log("success");
+        setDestination("");
+        setAmount("");
+      });
   }
 
   return (
