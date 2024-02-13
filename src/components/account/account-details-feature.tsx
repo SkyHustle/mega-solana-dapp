@@ -3,7 +3,6 @@
 import { PublicKey } from "@solana/web3.js";
 import { useMemo } from "react";
 import { useParams } from "next/navigation";
-import { Button } from "../ui/button";
 import { ExplorerLink } from "../cluster/cluster-ui";
 import { ellipsify } from "@/components/ui/ui-layout";
 import { AccountBalance, AirdropModal, ReceiveModal, SendModal } from "./account-ui";
