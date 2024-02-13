@@ -112,20 +112,18 @@ export function SendModal({ address }: { address: PublicKey }) {
     console.log(`Send ${amount} to ${destination}`);
     // do some input checks, fire off toast if invalid
 
-    // Mega Happy Path
-    mutation
-      .mutateAsync({
-        destination: new PublicKey(destination),
-        amount: parseFloat(amount),
-      })
-      .then(() => {
-        console.log("success");
-        setDestination("");
-        setAmount("");
-      });
+    // // Mega Happy Path
+    // mutation
+    //   .mutateAsync({
+    //     destination: new PublicKey(destination),
+    //     amount: parseFloat(amount),
+    //   })
+    //   .then(() => {
+    //     console.log("success");
+    //     setDestination("");
+    //     setAmount("");
+    //   });
   }
-
-  console.log("isSendDisabled", isSendDisabled);
 
   return (
     <Dialog>
@@ -174,20 +172,25 @@ export function SendModal({ address }: { address: PublicKey }) {
               Close
             </Button>
           </DialogClose>
-          <DialogClose asChild>
-            <TooltipProvider>
-              <Tooltip delayDuration={0}>
-                <TooltipTrigger asChild>
-                  <div>
+
+          <TooltipProvider>
+            <Tooltip delayDuration={0}>
+              <TooltipTrigger asChild>
+                <div>
+                  <DialogClose asChild>
                     <Button type="submit" onClick={handleSend} disabled={isSendDisabled}>
                       Send
                     </Button>
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent>{isSendDisabled ? <p>Invalid input</p> : null}</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </DialogClose>
+                  </DialogClose>
+                </div>
+              </TooltipTrigger>
+              {isSendDisabled && (
+                <TooltipContent>
+                  <p>Invalid Input</p>
+                </TooltipContent>
+              )}
+            </Tooltip>
+          </TooltipProvider>
         </DialogFooter>
       </DialogContent>
     </Dialog>
