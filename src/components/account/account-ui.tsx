@@ -110,19 +110,17 @@ export function SendModal({ address }: { address: PublicKey }) {
 
   function handleSend() {
     console.log(`Send ${amount} to ${destination}`);
-    // do some input checks, fire off toast if invalid
 
-    // // Mega Happy Path
-    // mutation
-    //   .mutateAsync({
-    //     destination: new PublicKey(destination),
-    //     amount: parseFloat(amount),
-    //   })
-    //   .then(() => {
-    //     console.log("success");
-    //     setDestination("");
-    //     setAmount("");
-    //   });
+    mutation
+      .mutateAsync({
+        destination: new PublicKey(destination),
+        amount: parseFloat(amount),
+      })
+      .then(() => {
+        console.log("success");
+        setDestination("");
+        setAmount("");
+      });
   }
 
   return (
