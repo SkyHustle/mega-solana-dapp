@@ -9,6 +9,9 @@ import {
   LAMPORTS_PER_SOL,
 } from "@solana/web3.js";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { useCluster } from "../cluster/cluster-data-access";
+import { ellipsify } from "../ui/ui-layout";
 
 export function useGetBalance({ address }: { address: PublicKey }) {
   const { connection } = useConnection();
@@ -21,7 +24,7 @@ export function useGetBalance({ address }: { address: PublicKey }) {
 
 export function useTransferSol({ address }: { address: PublicKey }) {
   const { connection } = useConnection();
-  //   const transactionToast = useTransactionToast();
+  const { getExplorerUrl } = useCluster();
   const wallet = useWallet();
   const client = useQueryClient();
 
@@ -52,8 +55,14 @@ export function useTransferSol({ address }: { address: PublicKey }) {
     },
     onSuccess: (signature) => {
       if (signature) {
-        // transactionToast(signature);
-        console.log("signature", signature);
+        toast.success("Transaction Successfull", {
+          description: ellipsify(signature),
+          action: {
+            label: "Explorer Link",
+            onClick: () => window.open(getExplorerUrl(`tx/${signature}`), "_blank"),
+          },
+          duration: 10000,
+        });
       }
       return Promise.all([
         client.invalidateQueries({
@@ -65,7 +74,10 @@ export function useTransferSol({ address }: { address: PublicKey }) {
       ]);
     },
     onError: (error) => {
-      //   toast.error(`Transaction failed! ${error}`);
+      toast.error("Transaction Failed", {
+        description: `${error}`,
+        duration: 10000,
+      });
       console.log("error", `Transaction failed! ${error}`);
     },
   });

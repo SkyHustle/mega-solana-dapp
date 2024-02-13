@@ -7,6 +7,7 @@ import { UiLayout } from "@/components/ui/ui-layout";
 import { SolanaProvider } from "@/providers/solana-provider";
 import { ClusterProvider } from "@/components/cluster/cluster-data-access";
 import { ReactQueryProvider } from "@/providers/react-query-provider";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 const fontSans = FontSans({
@@ -37,6 +38,7 @@ export default function RootLayout({
             <ClusterProvider>
               <SolanaProvider>
                 <UiLayout>{children}</UiLayout>
+                <Toaster richColors />
               </SolanaProvider>
             </ClusterProvider>
             <SpeedInsights />
