@@ -1,8 +1,12 @@
 import { PublicKey } from "@solana/web3.js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGetBalance, useTransferSol } from "./account-data-access";
-import { LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { LAMPORTS_PER_SOL, PUBLIC_KEY_LENGTH } from "@solana/web3.js";
 import { Check, Copy, HandCoins, Send } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -13,9 +17,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 
 export function AccountBalance({ address }: { address: PublicKey }) {
   const query = useGetBalance({ address });
@@ -95,8 +96,17 @@ export function ReceiveModal({ address }: { address: PublicKey }) {
 export function SendModal({ address }: { address: PublicKey }) {
   const [destination, setDestination] = useState("");
   const [amount, setAmount] = useState("");
+  const [isSendDisabled, setIsSendDisabled] = useState(true);
 
   const mutation = useTransferSol({ address });
+
+  useEffect(() => {
+    if (destination.length >= PUBLIC_KEY_LENGTH && parseFloat(amount) > 0) {
+      setIsSendDisabled(false);
+    } else {
+      setIsSendDisabled(true);
+    }
+  }, [destination, amount]);
 
   function handleSend() {
     console.log(`Send ${amount} to ${destination}`);
@@ -114,6 +124,8 @@ export function SendModal({ address }: { address: PublicKey }) {
         setAmount("");
       });
   }
+
+  console.log("isSendDisabled", isSendDisabled);
 
   return (
     <Dialog>
@@ -163,9 +175,18 @@ export function SendModal({ address }: { address: PublicKey }) {
             </Button>
           </DialogClose>
           <DialogClose asChild>
-            <Button type="submit" onClick={handleSend}>
-              Send
-            </Button>
+            <TooltipProvider>
+              <Tooltip delayDuration={0}>
+                <TooltipTrigger asChild>
+                  <div>
+                    <Button type="submit" onClick={handleSend} disabled={isSendDisabled}>
+                      Send
+                    </Button>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>{isSendDisabled ? <p>Invalid input</p> : null}</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </DialogClose>
         </DialogFooter>
       </DialogContent>
