@@ -1,12 +1,16 @@
-import { PublicKey } from "@solana/web3.js";
-import { useEffect, useState } from "react";
 import { useRequestAirdrop, useGetBalance, useTransferSol, useGetSignatures } from "./account-data-access";
 import { LAMPORTS_PER_SOL, PUBLIC_KEY_LENGTH, type ConfirmedSignatureInfo } from "@solana/web3.js";
-import { Check, Copy, HandCoins, Send, Droplet } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { PublicKey } from "@solana/web3.js";
+import { useEffect, useState } from "react";
+import { Check, Copy, HandCoins, Send, Droplet } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { ExplorerLink } from "../cluster/cluster-ui";
+import { ColumnDef } from "@tanstack/react-table";
+import { ellipsify } from "../ui/ui-layout";
+import DataTable from "../ui/data-table";
 import {
   Dialog,
   DialogClose,
@@ -17,7 +21,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ExplorerLink } from "../cluster/cluster-ui";
 
 export function AccountBalance({ address }: { address: PublicKey }) {
   const query = useGetBalance({ address });
@@ -254,19 +257,7 @@ export function AccountTransactions({ address }: { address: PublicKey }) {
 
   const txSignatures: ConfirmedSignatureInfo[] | undefined = query.data ?? [];
 
-  console.log(txSignatures);
-
   return <DataTable columns={columns} data={txSignatures} />;
-}
-
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ellipsify } from "../ui/ui-layout";
-
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
 }
 
 export const columns: ColumnDef<ConfirmedSignatureInfo>[] = [
@@ -297,48 +288,3 @@ export const columns: ColumnDef<ConfirmedSignatureInfo>[] = [
     header: "Status",
   },
 ];
-
-export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
-  return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-                ))}
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </div>
-  );
-}
