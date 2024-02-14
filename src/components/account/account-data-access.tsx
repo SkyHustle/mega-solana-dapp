@@ -171,3 +171,22 @@ async function createTransaction({
     latestBlockhash,
   };
 }
+
+export function useGetSignatures({ address }: { address: PublicKey }) {
+  const { connection } = useConnection();
+
+  return useQuery({
+    queryKey: ["get-signatures", { endpoint: connection.rpcEndpoint, address }],
+    queryFn: () => connection.getSignaturesForAddress(address),
+  });
+}
+
+export function useGetParsedTransactions(signatures: string[], options?: { enabled: boolean }) {
+  const { connection } = useConnection();
+
+  return useQuery({
+    queryKey: ["get-parsed-transactions", { endpoint: connection.rpcEndpoint, signatures }],
+    queryFn: () => connection.getParsedTransactions(signatures),
+    ...options,
+  });
+}

@@ -1,6 +1,12 @@
 import { PublicKey } from "@solana/web3.js";
 import { useEffect, useState } from "react";
-import { useRequestAirdrop, useGetBalance, useTransferSol } from "./account-data-access";
+import {
+  useRequestAirdrop,
+  useGetBalance,
+  useTransferSol,
+  useGetSignatures,
+  useGetParsedTransactions,
+} from "./account-data-access";
 import { LAMPORTS_PER_SOL, PUBLIC_KEY_LENGTH } from "@solana/web3.js";
 import { Check, Copy, HandCoins, Send, Droplet } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -246,4 +252,20 @@ export function ReceiveModal({ address }: { address: PublicKey }) {
       </DialogContent>
     </Dialog>
   );
+}
+
+export function AccountTransactions({ address }: { address: PublicKey }) {
+  const signaturesQuery = useGetSignatures({ address });
+
+  // Ensure signatures are defined and map them only if data is available
+  const signatures = signaturesQuery.data?.map((sigInfo) => sigInfo.signature) ?? [];
+
+  // Use the 'enabled' option to conditionally run the query
+  const parsedTransactionsQuery = useGetParsedTransactions(signatures, {
+    enabled: !!signaturesQuery.data, // This query runs only if signaturesQuery.data is truthy
+  });
+
+  console.log(parsedTransactionsQuery.data);
+
+  return <div>Getting Signatures</div>;
 }

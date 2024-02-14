@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { useParams } from "next/navigation";
 import { ExplorerLink } from "../cluster/cluster-ui";
 import { ellipsify } from "@/components/ui/ui-layout";
-import { AccountBalance, AirdropModal, ReceiveModal, SendModal } from "./account-ui";
+import { AccountBalance, AccountTransactions, AirdropModal, ReceiveModal, SendModal } from "./account-ui";
 
 export default function AccountDetailFeature() {
   const params = useParams();
@@ -38,6 +38,8 @@ export default function AccountDetailFeature() {
             <SendModal address={address} />
 
             <ReceiveModal address={address} />
+
+            <AccountTransactions address={address} />
           </div>
         </div>
       </div>

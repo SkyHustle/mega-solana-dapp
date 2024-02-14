@@ -26,6 +26,7 @@
     "@solana/wallet-adapter-solflare": "^0.6.28",
     "@solana/wallet-adapter-wallets": "^0.19.26",
     "@tanstack/react-query": "^5.20.2",
+    "@tanstack/react-table": "^8.12.0",
     "@vercel/speed-insights": "^1.0.9",
     "bs58": "^4.0.1",
     "class-variance-authority": "^0.7.0",
