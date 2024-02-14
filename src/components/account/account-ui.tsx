@@ -1,12 +1,6 @@
 import { PublicKey } from "@solana/web3.js";
 import { useEffect, useState } from "react";
-import {
-  useRequestAirdrop,
-  useGetBalance,
-  useTransferSol,
-  useGetSignatures,
-  useGetParsedTransactions,
-} from "./account-data-access";
+import { useRequestAirdrop, useGetBalance, useTransferSol, useGetSignatures } from "./account-data-access";
 import { LAMPORTS_PER_SOL, PUBLIC_KEY_LENGTH, type ConfirmedSignatureInfo } from "@solana/web3.js";
 import { Check, Copy, HandCoins, Send, Droplet } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -23,6 +17,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { ExplorerLink } from "../cluster/cluster-ui";
 
 export function AccountBalance({ address }: { address: PublicKey }) {
   const query = useGetBalance({ address });
@@ -271,6 +266,7 @@ export function AccountTransactions({ address }: { address: PublicKey }) {
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { ellipsify } from "../ui/ui-layout";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -281,6 +277,11 @@ export const columns: ColumnDef<ConfirmedSignatureInfo>[] = [
   {
     accessorKey: "signature",
     header: "Signature",
+    cell: ({ row }) => {
+      const signature: string = row.getValue("signature");
+
+      return <ExplorerLink path={`tx/${signature}`} label={ellipsify(signature, 8)} />;
+    },
   },
   {
     accessorKey: "slot",
