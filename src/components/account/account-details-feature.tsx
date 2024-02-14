@@ -38,11 +38,10 @@ export default function AccountDetailFeature() {
             <SendModal address={address} />
 
             <ReceiveModal address={address} />
-
-            <AccountTransactions address={address} />
           </div>
         </div>
       </div>
+      <AccountTransactions address={address} />
     </div>
   );
 }

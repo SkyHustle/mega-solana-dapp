@@ -7,7 +7,7 @@ import {
   useGetSignatures,
   useGetParsedTransactions,
 } from "./account-data-access";
-import { LAMPORTS_PER_SOL, PUBLIC_KEY_LENGTH, type ParsedTransactionMeta } from "@solana/web3.js";
+import { LAMPORTS_PER_SOL, PUBLIC_KEY_LENGTH, type ConfirmedSignatureInfo } from "@solana/web3.js";
 import { Check, Copy, HandCoins, Send, Droplet } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Input } from "@/components/ui/input";
@@ -257,7 +257,86 @@ export function ReceiveModal({ address }: { address: PublicKey }) {
 export function AccountTransactions({ address }: { address: PublicKey }) {
   const query = useGetSignatures({ address });
 
-  console.log(query.data);
+  const txSignatures: ConfirmedSignatureInfo[] | undefined = query.data ?? [];
 
-  return <div>Getting Signatures</div>;
+  console.log(txSignatures);
+
+  return (
+    <div className="container mx-auto py-10">
+      <DataTable columns={columns} data={txSignatures} />
+    </div>
+  );
+}
+
+import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
+
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+
+interface DataTableProps<TData, TValue> {
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
+}
+
+export const columns: ColumnDef<ConfirmedSignatureInfo>[] = [
+  {
+    accessorKey: "signature",
+    header: "Signature",
+  },
+  {
+    accessorKey: "slot",
+    header: "Slot",
+  },
+  {
+    accessorKey: "blockTime",
+    header: "Age",
+  },
+  {
+    accessorKey: "confirmationStatus",
+    header: "Status",
+  },
+];
+
+export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
+
+  return (
+    <div className="rounded-md border">
+      <Table>
+        <TableHeader>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => {
+                return (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                  </TableHead>
+                );
+              })}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                No results.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </div>
+  );
 }
