@@ -21,7 +21,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { format } from "path";
+import { formatTimeSince } from "@/lib/utils";
 
 export function AccountBalance({ address }: { address: PublicKey }) {
   const query = useGetBalance({ address });
@@ -285,7 +285,7 @@ export const columns: ColumnDef<ConfirmedSignatureInfo>[] = [
     header: "Age",
     cell: ({ row }) => {
       const blockTime: number = row.getValue("blockTime");
-      const formatted = new Date((blockTime ?? 0) * 1000).toISOString();
+      const formatted = formatTimeSince(blockTime);
 
       return formatted;
     },
