@@ -256,11 +256,7 @@ export function AccountTransactions({ address }: { address: PublicKey }) {
 
   console.log(txSignatures);
 
-  return (
-    <div className="container mx-auto py-10">
-      <DataTable columns={columns} data={txSignatures} />
-    </div>
-  );
+  return <DataTable columns={columns} data={txSignatures} />;
 }
 
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
@@ -286,6 +282,11 @@ export const columns: ColumnDef<ConfirmedSignatureInfo>[] = [
   {
     accessorKey: "slot",
     header: "Slot",
+    cell: ({ row }) => {
+      const slot: string = row.getValue("slot");
+
+      return <ExplorerLink path={`block/${slot}`} label={slot} />;
+    },
   },
   {
     accessorKey: "blockTime",
