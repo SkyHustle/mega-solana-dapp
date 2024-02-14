@@ -6,6 +6,7 @@ import { WalletError } from "@solana/wallet-adapter-base";
 import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { SolflareWalletAdapter } from "@solana/wallet-adapter-solflare";
+// import { CoinbaseWalletAdapter } from "@solana/wallet-adapter-wallets";
 import { ReactNode, useCallback, useMemo } from "react";
 import { toWalletAdapterNetwork, useCluster } from "../components/cluster/cluster-data-access";
 
@@ -23,6 +24,9 @@ export function SolanaProvider({ children }: { children: ReactNode }) {
       new SolflareWalletAdapter({
         network: toWalletAdapterNetwork(cluster.network),
       }),
+      // new CoinbaseWalletAdapter({
+      //   network: toWalletAdapterNetwork(cluster.network),
+      // }),
     ],
     [cluster]
   );
