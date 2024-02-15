@@ -21,6 +21,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { formatTimeSince, ellipsify } from "@/lib/utils";
+import LoadingSpinner from "../ui/loading-spinner";
 
 export function AccountBalance({ address }: { address: PublicKey }) {
   const query = useGetBalance({ address });
@@ -264,7 +265,7 @@ export function AccountTransactions({ address }: { address: PublicKey }) {
           <h2 className="font-bold leading-7 sm:truncate sm:text-2xl sm:tracking-tight">Transaction History</h2>
         </div>
         {query.isLoading ? (
-          <span className="">Loading...</span>
+          <LoadingSpinner />
         ) : (
           <div className="mt-4 flex md:ml-4 md:mt-0">
             <Button type="button" variant="outline" size="sm">
