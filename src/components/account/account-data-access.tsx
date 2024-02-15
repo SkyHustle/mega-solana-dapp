@@ -11,7 +11,7 @@ import {
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useCluster } from "../cluster/cluster-data-access";
-import { ellipsify } from "../ui/ui-layout";
+import { ellipsify } from "@/lib/utils";
 
 export function useGetBalance({ address }: { address: PublicKey }) {
   const { connection } = useConnection();

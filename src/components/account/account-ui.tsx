@@ -9,7 +9,6 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { ExplorerLink } from "../cluster/cluster-ui";
 import { ColumnDef } from "@tanstack/react-table";
-import { ellipsify } from "../ui/ui-layout";
 import DataTable from "../ui/data-table";
 import {
   Dialog,
@@ -21,7 +20,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { formatTimeSince } from "@/lib/utils";
+import { formatTimeSince, ellipsify } from "@/lib/utils";
 
 export function AccountBalance({ address }: { address: PublicKey }) {
   const query = useGetBalance({ address });

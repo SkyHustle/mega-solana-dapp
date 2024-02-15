@@ -4,7 +4,7 @@ import { PublicKey } from "@solana/web3.js";
 import { useMemo } from "react";
 import { useParams } from "next/navigation";
 import { ExplorerLink } from "../cluster/cluster-ui";
-import { ellipsify } from "@/components/ui/ui-layout";
+import { ellipsify } from "@/lib/utils";
 import { AccountBalance, AccountTransactions, AirdropModal, ReceiveModal, SendModal } from "./account-ui";
 
 export default function AccountDetailFeature() {
