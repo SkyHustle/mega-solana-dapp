@@ -20,6 +20,10 @@ export default function DataTable<TData, TValue>({ columns, data }: DataTablePro
     getPaginationRowModel: getPaginationRowModel(),
   });
 
+  // Accessing current page index and total page count
+  const currentPage = table.getState().pagination.pageIndex + 1; // Adding 1 to make it human-readable (1-based instead of 0-based)
+  const totalPages = table.getPageCount();
+
   return (
     <div>
       <div className="rounded-md border">
@@ -57,6 +61,9 @@ export default function DataTable<TData, TValue>({ columns, data }: DataTablePro
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
+        <div className="text-sm">
+          Page {currentPage} of {totalPages}
+        </div>
         <Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
           Previous
         </Button>
