@@ -3,7 +3,7 @@ import { LAMPORTS_PER_SOL, PUBLIC_KEY_LENGTH, type ConfirmedSignatureInfo } from
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { PublicKey } from "@solana/web3.js";
 import { useEffect, useState } from "react";
-import { Check, Copy, HandCoins, Send, Droplet } from "lucide-react";
+import { Check, Copy, HandCoins, Send, Droplet, RefreshCw } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -257,7 +257,21 @@ export function AccountTransactions({ address }: { address: PublicKey }) {
 
   const txSignatures: ConfirmedSignatureInfo[] | undefined = query.data ?? [];
 
-  return <DataTable columns={columns} data={txSignatures} />;
+  return (
+    <>
+      <div className="flex items-center justify-between py-3">
+        <div className="min-w-0 flex-1">
+          <h2 className="font-bold leading-7 sm:truncate sm:text-2xl sm:tracking-tight">Transaction History</h2>
+        </div>
+        <div className="mt-4 flex md:ml-4 md:mt-0">
+          <Button type="button" variant="outline" size="sm">
+            <RefreshCw className="h-5 w-5 pr-1" />
+          </Button>
+        </div>
+      </div>
+      <DataTable columns={columns} data={txSignatures} />
+    </>
+  );
 }
 
 export const columns: ColumnDef<ConfirmedSignatureInfo>[] = [
