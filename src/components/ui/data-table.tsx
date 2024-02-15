@@ -11,6 +11,11 @@ export default function DataTable<TData, TValue>({ columns, data }: DataTablePro
   const table = useReactTable({
     data,
     columns,
+    initialState: {
+      pagination: {
+        pageSize: 5, // Set initial page size to 5
+      },
+    },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
