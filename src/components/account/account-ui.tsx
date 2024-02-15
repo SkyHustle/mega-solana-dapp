@@ -258,19 +258,24 @@ export function AccountTransactions({ address }: { address: PublicKey }) {
   const txSignatures: ConfirmedSignatureInfo[] | undefined = query.data ?? [];
 
   return (
-    <>
+    <div>
       <div className="flex items-center justify-between py-3">
         <div className="min-w-0 flex-1">
           <h2 className="font-bold leading-7 sm:truncate sm:text-2xl sm:tracking-tight">Transaction History</h2>
         </div>
-        <div className="mt-4 flex md:ml-4 md:mt-0">
-          <Button type="button" variant="outline" size="sm">
-            <RefreshCw className="h-5 w-5 pr-1" onClick={() => query.refetch()} />
-          </Button>
-        </div>
+        {query.isLoading ? (
+          <span className="">Loading...</span>
+        ) : (
+          <div className="mt-4 flex md:ml-4 md:mt-0">
+            <Button type="button" variant="outline" size="sm">
+              <RefreshCw className="h-5 w-5 pr-1" onClick={() => query.refetch()} />
+            </Button>
+          </div>
+        )}
+        {query.isError && <pre className="">Error: {query.error?.message.toString()}</pre>}
       </div>
-      <DataTable columns={columns} data={txSignatures} />
-    </>
+      {query.isSuccess && <DataTable columns={columns} data={txSignatures} />}
+    </div>
   );
 }
 
