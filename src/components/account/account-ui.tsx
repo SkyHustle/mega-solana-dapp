@@ -265,7 +265,7 @@ export function AccountTransactions({ address }: { address: PublicKey }) {
         </div>
         <div className="mt-4 flex md:ml-4 md:mt-0">
           <Button type="button" variant="outline" size="sm">
-            <RefreshCw className="h-5 w-5 pr-1" />
+            <RefreshCw className="h-5 w-5 pr-1" onClick={() => query.refetch()} />
           </Button>
         </div>
       </div>
