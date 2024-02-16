@@ -28,12 +28,12 @@ export function AccountBalance({ address }: { address: PublicKey }) {
 
   return (
     <div>
-      <h1
+      <h3
         className="text-1xl font-bold tracking-tight text-primary sm:text-2xl cursor-pointer"
         onClick={() => query.refetch()}
       >
-        {query.data ? Math.round((query.data / LAMPORTS_PER_SOL) * 100000) / 100000 : "..."} SOL
-      </h1>
+        {query.data ? Math.round((query.data / LAMPORTS_PER_SOL) * 100000) / 100000 + " SOL" : <LoadingSpinner />}
+      </h3>
     </div>
   );
 }

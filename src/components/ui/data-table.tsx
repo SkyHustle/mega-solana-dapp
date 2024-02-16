@@ -13,7 +13,7 @@ export default function DataTable<TData, TValue>({ columns, data }: DataTablePro
     columns,
     initialState: {
       pagination: {
-        pageSize: 5, // Set initial page size to 5
+        pageSize: 10, // Set initial page size to 5
       },
     },
     getCoreRowModel: getCoreRowModel(),
