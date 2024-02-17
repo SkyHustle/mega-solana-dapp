@@ -44,7 +44,25 @@ export const columns: ColumnDef<{ pubkey: PublicKey; account: AccountInfo<Parsed
     cell: ({ row }) => {
       const pubKey = row.getValue("pubkey") as PublicKey;
 
-      return <ExplorerLink path={`tx/${pubKey.toString()}`} label={ellipsify(pubKey.toString(), 8)} />;
+      return <ExplorerLink path={`account/${pubKey.toString()}`} label={ellipsify(pubKey.toString(), 4)} />;
+    },
+  },
+  {
+    accessorKey: "account",
+    header: "Mint",
+    cell: ({ row }) => {
+      // assert the type of the account to be AccountInfo<ParsedAccountData>
+      const accountInfo = row.getValue("account") as AccountInfo<ParsedAccountData>;
+
+      // Since AccountInfo's data property could be of several types, we need to ensure it's the type we expect
+      // Assuming ParsedAccountData has a structure where 'parsed' and 'info' are defined
+      if ("parsed" in accountInfo.data && "info" in accountInfo.data.parsed) {
+        const mint: string = accountInfo.data.parsed.info.mint;
+        return <ExplorerLink path={`account/${mint}`} label={ellipsify(mint, 4)} />;
+      }
+
+      // Return a fallback or error component if the data isn't in the expected shape
+      return <div>Invalid data</div>;
     },
   },
 ];
