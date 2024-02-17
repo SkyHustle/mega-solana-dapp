@@ -1,5 +1,5 @@
-import TokenFeature from "@/components/token/token-feature";
+import TokenListFeature from "@/components/tokens/token-list-feature";
 
 export default function Page() {
-  return <TokenFeature />;
+  return <TokenListFeature />;
 }
