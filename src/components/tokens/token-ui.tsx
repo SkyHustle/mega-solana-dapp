@@ -10,11 +10,9 @@ import { ellipsify } from "@/lib/utils";
 
 export function TokenAccounts({ address }: { address: PublicKey }) {
   const query = useGetTokenAccounts({ address });
-  console.log("TokenAccounts", query.data);
 
   const tokenAccounts: { pubkey: PublicKey; account: AccountInfo<ParsedAccountData> }[] = query.data ?? [];
 
-  console.log("TokenAccounts", tokenAccounts);
   return (
     <div>
       <div className="flex items-center justify-between py-3">
@@ -39,50 +37,32 @@ export function TokenAccounts({ address }: { address: PublicKey }) {
 
 export const columns: ColumnDef<{ pubkey: PublicKey; account: AccountInfo<ParsedAccountData> }>[] = [
   {
-    accessorKey: "pubkey",
+    id: "pubkey", // Unique ID for the column
+    accessorKey: "pubkey", // Accessor points to the pubkey data
     header: "Public Key",
     cell: ({ row }) => {
       const pubKey = row.getValue("pubkey") as PublicKey;
-
       return <ExplorerLink path={`account/${pubKey.toString()}`} label={ellipsify(pubKey.toString(), 4)} />;
     },
   },
   {
-    accessorKey: "account",
+    id: "mint", // Unique ID for the column
+    accessorFn: (row) => row.account, // Custom accessor function to get the account data
     header: "Mint",
-    cell: ({ row }) => {
-      // assert the type of the account to be AccountInfo<ParsedAccountData>
-      const accountInfo = row.getValue("account") as AccountInfo<ParsedAccountData>;
-
-      // Since AccountInfo's data property could be of several types, we need to ensure it's the type we expect
-      // Assuming ParsedAccountData has a structure where 'parsed' and 'info' are defined
-      if ("parsed" in accountInfo.data && "info" in accountInfo.data.parsed) {
-        const mint: string = accountInfo.data.parsed.info.mint;
-        return <ExplorerLink path={`account/${mint}`} label={ellipsify(mint, 4)} />;
-      }
-
-      // Return a fallback or error component if the data isn't in the expected shape
-      return "Invalid data";
+    cell: ({ cell }) => {
+      const accountInfo = cell.getValue() as AccountInfo<ParsedAccountData>; // Use cell.getValue() to get the value from the custom accessor
+      const mint: string = accountInfo.data.parsed.info.mint;
+      return <ExplorerLink path={`account/${mint}`} label={ellipsify(mint, 4)} />;
     },
   },
   {
-    accessorKey: "account",
+    id: "balance", // Unique ID for the column
+    accessorFn: (row) => row.account, // Reuse the custom accessor function
     header: "Balance",
-    cell: ({ row }) => {
-      // assert the type of the account to be AccountInfo<ParsedAccountData>
-      const accountInfo = row.getValue("account") as AccountInfo<ParsedAccountData>;
-
-      if (
-        "parsed" in accountInfo.data &&
-        "info" in accountInfo.data.parsed &&
-        "tokenAmount" in accountInfo.data.parsed.info
-      ) {
-        const tokenAmount: number = accountInfo.data.parsed.info.tokenAmount.uiAmount;
-        return tokenAmount.toString();
-      }
-
-      // Return a fallback or error component if the data isn't in the expected shape
-      return "Invalid data";
+    cell: ({ cell }) => {
+      const accountInfo = cell.getValue() as AccountInfo<ParsedAccountData>; // Reuse the logic to extract the balance
+      const tokenAmount: number = accountInfo.data.parsed.info.tokenAmount.uiAmount;
+      return tokenAmount.toString();
     },
   },
 ];
