@@ -62,7 +62,27 @@ export const columns: ColumnDef<{ pubkey: PublicKey; account: AccountInfo<Parsed
       }
 
       // Return a fallback or error component if the data isn't in the expected shape
-      return <div>Invalid data</div>;
+      return "Invalid data";
+    },
+  },
+  {
+    accessorKey: "account",
+    header: "Balance",
+    cell: ({ row }) => {
+      // assert the type of the account to be AccountInfo<ParsedAccountData>
+      const accountInfo = row.getValue("account") as AccountInfo<ParsedAccountData>;
+
+      if (
+        "parsed" in accountInfo.data &&
+        "info" in accountInfo.data.parsed &&
+        "tokenAmount" in accountInfo.data.parsed.info
+      ) {
+        const tokenAmount: number = accountInfo.data.parsed.info.tokenAmount.uiAmount;
+        return tokenAmount.toString();
+      }
+
+      // Return a fallback or error component if the data isn't in the expected shape
+      return "Invalid data";
     },
   },
 ];
