@@ -108,14 +108,9 @@ export function useCreateMint({ address }: { address: PublicKey }) {
           duration: 10000,
         });
       }
-      return Promise.all([
-        client.invalidateQueries({
-          queryKey: ["get-token-account-balance", { endpoint: connection.rpcEndpoint, account: address.toString() }],
-        }),
-        client.invalidateQueries({
-          queryKey: ["get-signatures", { endpoint: connection.rpcEndpoint, address }],
-        }),
-      ]);
+      return client.invalidateQueries({
+        queryKey: ["get-token-accounts", { endpoint: connection.rpcEndpoint, address }],
+      });
     },
     onError: (error) => {
       toast.error("Transaction Failed", {
@@ -179,17 +174,9 @@ export function useMintToken({
         });
       }
 
-      return Promise.all([
-        client.invalidateQueries({
-          queryKey: [
-            "get-token-account-balance",
-            {
-              endpoint: connection.rpcEndpoint,
-              account: tokenAccountPublicKey.toString(),
-            },
-          ],
-        }),
-      ]);
+      return client.refetchQueries({
+        queryKey: ["get-token-accounts", { endpoint: connection.rpcEndpoint, address }],
+      });
     },
     onError: (error) => {
       toast.error("Transaction Failed", {
