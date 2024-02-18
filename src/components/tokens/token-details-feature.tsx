@@ -17,6 +17,7 @@ export default function TokenDetailFeature() {
       console.log(`Invalid public key`, e);
     }
   }, [params]);
+
   if (!address) {
     return <div>Error loading account</div>;
   }
