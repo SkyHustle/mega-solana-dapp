@@ -24,13 +24,7 @@ import {
 export function TokenAccounts({ address }: { address: PublicKey }) {
   const query = useGetTokenAccounts({ address });
 
-  const handleSubmit = (amount: string, mint: string, tokenAccount: string) => {
-    console.log("Submitting amount:", amount, "mint pub key:", mint, "token account:", tokenAccount);
-  };
-
   const tokenAccounts: { pubkey: PublicKey; account: AccountInfo<ParsedAccountData> }[] = query.data ?? [];
-
-  const dynamicColumns = getColumns(handleSubmit);
 
   return (
     <div>
@@ -52,14 +46,12 @@ export function TokenAccounts({ address }: { address: PublicKey }) {
         )}
         {query.isError && <pre className="">Error: {query.error?.message.toString()}</pre>}
       </div>
-      {query.isSuccess && <DataTable columns={dynamicColumns} data={tokenAccounts} />}
+      {query.isSuccess && <DataTable columns={columns} data={tokenAccounts} />}
     </div>
   );
 }
 
-const getColumns = (
-  handleSubmit: (amount: string, mint: string, tokenAccount: string) => void
-): ColumnDef<{ pubkey: PublicKey; account: AccountInfo<ParsedAccountData> }>[] => [
+const columns: ColumnDef<{ pubkey: PublicKey; account: AccountInfo<ParsedAccountData> }>[] = [
   {
     id: "pubkey", // Unique ID for the column
     accessorKey: "pubkey", // Accessor points to the pubkey data
@@ -95,17 +87,28 @@ const getColumns = (
     cell: ({ row }) => {
       // Directly access the entire row data
       const rowData = row.original;
-      const tokenAccount = rowData.pubkey as PublicKey;
+      const tokenAccountAddress: string = rowData.pubkey.toString();
       const accountInfo = rowData.account as AccountInfo<ParsedAccountData>;
-      const mint: string = accountInfo.data.parsed.info.mint;
+      const mintAddress: string = accountInfo.data.parsed.info.mint;
 
-      return <MintTokenDialog onSubmit={(amount) => handleSubmit(amount, mint, tokenAccount.toString())} />;
+      return <MintTokenModal tokenAccountAddress={tokenAccountAddress} mintAddress={mintAddress} />;
     },
   },
 ];
 
-function MintTokenDialog({ onSubmit }: { onSubmit: (amount: string) => void }) {
-  const [amount, setAmount] = useState("");
+function MintTokenModal({ tokenAccountAddress, mintAddress }: { tokenAccountAddress: string; mintAddress: string }) {
+  const [amount, setAmount] = useState("1");
+
+  function handleSubmit() {
+    console.log(
+      "Submitting amount:",
+      amount,
+      "mint address:",
+      mintAddress,
+      "token account Address:",
+      tokenAccountAddress
+    );
+  }
 
   return (
     <Dialog>
@@ -126,6 +129,7 @@ function MintTokenDialog({ onSubmit }: { onSubmit: (amount: string) => void }) {
           <Input
             type="number"
             step="any"
+            min="1"
             id="amount"
             placeholder="amount"
             className="col-span-3"
@@ -140,8 +144,8 @@ function MintTokenDialog({ onSubmit }: { onSubmit: (amount: string) => void }) {
             </Button>
           </DialogClose>
           <DialogClose asChild>
-            <Button type="submit" onClick={() => onSubmit(amount)}>
-              Submit
+            <Button type="button" onClick={handleSubmit}>
+              Mint
             </Button>
           </DialogClose>
         </DialogFooter>
