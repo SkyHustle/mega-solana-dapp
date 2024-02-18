@@ -11,7 +11,7 @@ import { ellipsify } from "@/lib/utils";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { useMintToken } from "./token-data-access";
+import { useCreateMint, useMintToken } from "./token-data-access";
 import {
   Dialog,
   DialogTrigger,
@@ -25,8 +25,13 @@ import {
 
 export function TokenAccounts({ address }: { address: PublicKey }) {
   const query = useGetTokenAccounts({ address });
+  const mutation = useCreateMint({ address });
 
   const tokenAccounts: { pubkey: PublicKey; account: AccountInfo<ParsedAccountData> }[] = query.data ?? [];
+
+  function handleCreateToken() {
+    mutation.mutateAsync();
+  }
 
   return (
     <div>
@@ -38,7 +43,7 @@ export function TokenAccounts({ address }: { address: PublicKey }) {
           <LoadingSpinner />
         ) : (
           <div className="mt-4 flex md:ml-4 md:mt-0 gap-1">
-            <Button type="button" variant="outline" size="sm">
+            <Button type="button" variant="outline" size="sm" onClick={handleCreateToken}>
               Create Token
             </Button>
             <Button type="button" variant="outline" size="sm">

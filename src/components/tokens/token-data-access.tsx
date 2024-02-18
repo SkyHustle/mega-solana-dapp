@@ -1,11 +1,21 @@
-import { PublicKey, TransactionSignature, Transaction } from "@solana/web3.js";
+import { PublicKey, Keypair, SystemProgram, TransactionSignature, Transaction } from "@solana/web3.js";
 import { useQuery } from "@tanstack/react-query";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { ellipsify } from "@/lib/utils";
 import { useCluster } from "@/components/cluster/cluster-data-access";
-import { TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID, createMintToCheckedInstruction } from "@solana/spl-token";
+import {
+  TOKEN_2022_PROGRAM_ID,
+  TOKEN_PROGRAM_ID,
+  MINT_SIZE,
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  createMintToCheckedInstruction,
+  getMinimumBalanceForRentExemptMint,
+  createInitializeMintInstruction,
+  getAssociatedTokenAddress,
+  createAssociatedTokenAccountInstruction,
+} from "@solana/spl-token";
 
 export function useGetTokenAccounts({ address }: { address: PublicKey }) {
   const { connection } = useConnection();
@@ -22,6 +32,97 @@ export function useGetTokenAccounts({ address }: { address: PublicKey }) {
         }),
       ]);
       return [...tokenAccounts.value, ...token2022Accounts.value];
+    },
+  });
+}
+
+export function useCreateMint({ address }: { address: PublicKey }) {
+  const { connection } = useConnection();
+  const { sendTransaction } = useWallet();
+  const client = useQueryClient();
+  const { getExplorerUrl } = useCluster();
+
+  return useMutation({
+    mutationKey: ["create-token-mint", { endpoint: connection.rpcEndpoint, address }],
+    mutationFn: async () => {
+      let signature: TransactionSignature = "";
+      try {
+        // Token Mints are accounts which hold data ABOUT a specific token.
+        // Token Mints DO NOT hold tokens themselves.
+        const tokenMint = Keypair.generate();
+        // amount of SOL required for the account to not be deallocated
+        const lamports = await getMinimumBalanceForRentExemptMint(connection);
+        // `token.createMint` function creates a transaction with the following two instruction: `createAccount` and `createInitializeMintInstruction`.
+        const transaction = new Transaction().add(
+          // creates a new account
+          SystemProgram.createAccount({
+            fromPubkey: address,
+            newAccountPubkey: tokenMint.publicKey,
+            space: MINT_SIZE,
+            lamports,
+            programId: TOKEN_PROGRAM_ID,
+          }),
+          // initializes the new account as a Token Mint account
+          createInitializeMintInstruction(tokenMint.publicKey, 0, address, TOKEN_PROGRAM_ID)
+        );
+
+        const associatedToken = await getAssociatedTokenAddress(
+          tokenMint.publicKey,
+          address,
+          false,
+          TOKEN_PROGRAM_ID,
+          ASSOCIATED_TOKEN_PROGRAM_ID
+        );
+
+        transaction.add(
+          createAssociatedTokenAccountInstruction(
+            address,
+            associatedToken,
+            address,
+            tokenMint.publicKey,
+            TOKEN_PROGRAM_ID,
+            ASSOCIATED_TOKEN_PROGRAM_ID
+          )
+        );
+
+        // prompts the user to sign the transaction and submit it to the network
+        signature = await sendTransaction(transaction, connection, {
+          signers: [tokenMint],
+        });
+        console.log("Token Mint Tx Sig ", signature);
+
+        return signature;
+      } catch (err) {
+        toast.error("Error creating Token Mint");
+        console.log("error", err);
+      }
+    },
+    onSuccess: (signature) => {
+      if (signature) {
+        toast.success("Transaction Successfull", {
+          description: ellipsify(signature),
+          action: {
+            label: "Explorer Link",
+            onClick: () => window.open(getExplorerUrl(`tx/${signature}`), "_blank"),
+          },
+          duration: 10000,
+        });
+      }
+      return Promise.all([
+        client.invalidateQueries({
+          queryKey: ["get-token-account-balance", { endpoint: connection.rpcEndpoint, account: address.toString() }],
+        }),
+        client.invalidateQueries({
+          queryKey: ["get-signatures", { endpoint: connection.rpcEndpoint, address }],
+        }),
+      ]);
+    },
+    onError: (error) => {
+      toast.error("Transaction Failed", {
+        description: `${error}`,
+        duration: 10000,
+      });
+      console.log("error", `Transaction failed! ${error}`);
     },
   });
 }
