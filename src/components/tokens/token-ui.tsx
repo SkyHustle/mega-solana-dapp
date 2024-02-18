@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useGetTokenAccounts } from "./token-data-access";
 import DataTable from "../ui/data-table";
 import LoadingSpinner from "../ui/loading-spinner";
@@ -10,6 +10,8 @@ import { PublicKey, AccountInfo, ParsedAccountData } from "@solana/web3.js";
 import { ellipsify } from "@/lib/utils";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useMintToken } from "./token-data-access";
 import {
   Dialog,
   DialogTrigger,
@@ -87,27 +89,34 @@ const columns: ColumnDef<{ pubkey: PublicKey; account: AccountInfo<ParsedAccount
     cell: ({ row }) => {
       // Directly access the entire row data
       const rowData = row.original;
-      const tokenAccountAddress: string = rowData.pubkey.toString();
+      const tokenAccountPublicKey: PublicKey = rowData.pubkey;
       const accountInfo = rowData.account as AccountInfo<ParsedAccountData>;
-      const mintAddress: string = accountInfo.data.parsed.info.mint;
+      const mintPublicKey: PublicKey = new PublicKey(accountInfo.data.parsed.info.mint);
 
-      return <MintTokenModal tokenAccountAddress={tokenAccountAddress} mintAddress={mintAddress} />;
+      return <MintTokenModal tokenAccountPublicKey={tokenAccountPublicKey} mintPublicKey={mintPublicKey} />;
     },
   },
 ];
 
-function MintTokenModal({ tokenAccountAddress, mintAddress }: { tokenAccountAddress: string; mintAddress: string }) {
+function MintTokenModal({
+  tokenAccountPublicKey,
+  mintPublicKey,
+}: {
+  tokenAccountPublicKey: PublicKey;
+  mintPublicKey: PublicKey;
+}) {
+  const { publicKey } = useWallet();
+  const mutation = useMintToken({
+    address: publicKey,
+    mintPublicKey,
+    tokenAccountPublicKey,
+  });
   const [amount, setAmount] = useState("1");
 
   function handleSubmit() {
-    console.log(
-      "Submitting amount:",
-      amount,
-      "mint address:",
-      mintAddress,
-      "token account Address:",
-      tokenAccountAddress
-    );
+    mutation.mutateAsync({ amount: parseFloat(amount) }).then(() => {
+      setAmount("1");
+    });
   }
 
   return (
