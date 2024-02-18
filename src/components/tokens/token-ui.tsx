@@ -107,7 +107,7 @@ function MintTokenModal({
 }) {
   const { publicKey } = useWallet();
   const mutation = useMintToken({
-    address: publicKey,
+    address: publicKey!,
     mintPublicKey,
     tokenAccountPublicKey,
   });
