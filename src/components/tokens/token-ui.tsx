@@ -6,11 +6,11 @@ import { Button } from "../ui/button";
 import { PlusCircle, RefreshCw } from "lucide-react";
 import { ExplorerLink } from "../cluster/cluster-ui";
 import { ColumnDef } from "@tanstack/react-table";
-import { PublicKey, AccountInfo, ParsedAccountData } from "@solana/web3.js";
+import { PublicKey, AccountInfo, ParsedAccountData, Connection } from "@solana/web3.js";
 import { ellipsify } from "@/lib/utils";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { useWallet } from "@solana/wallet-adapter-react";
+import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 import { useCreateMint, useMintToken } from "./token-data-access";
 import {
   Dialog,
@@ -23,9 +23,29 @@ import {
   DialogClose,
 } from "../ui/dialog";
 import { MintLayout } from "@solana/spl-token";
-import { useConnection } from "@solana/wallet-adapter-react";
 
-const enhanceAccountsWithMintAuthority = async (accounts, connection, userAddress) => {
+type EnhancedAccount = {
+  pubkey: PublicKey;
+  account: AccountInfo<ParsedAccountData>;
+  isMintAuthority: boolean;
+};
+
+type TokenAccount = {
+  pubkey: PublicKey;
+  account: AccountInfo<{
+    parsed: {
+      info: {
+        mint: string; // The mint address in string format
+      };
+    };
+  }>;
+};
+
+const enhanceAccountsWithMintAuthority = async (
+  accounts: TokenAccount[],
+  connection: Connection,
+  userAddress: PublicKey
+): Promise<(TokenAccount & { isMintAuthority: boolean })[]> => {
   const enhancedAccounts = await Promise.all(
     accounts.map(async (account) => {
       const mintAddress = new PublicKey(account.account.data.parsed.info.mint);
@@ -45,7 +65,7 @@ const enhanceAccountsWithMintAuthority = async (accounts, connection, userAddres
 export function TokenAccounts({ address }: { address: PublicKey }) {
   const mutation = useCreateMint({ address });
   const { data: accounts, isSuccess } = useGetTokenAccounts({ address });
-  const [enhancedAccounts, setEnhancedAccounts] = useState([]);
+  const [enhancedAccounts, setEnhancedAccounts] = useState<EnhancedAccount[]>([]);
   const { connection } = useConnection();
 
   useEffect(() => {
