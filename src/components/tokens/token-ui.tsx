@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useGetTokenAccounts } from "./token-data-access";
 import DataTable from "../ui/data-table";
 import LoadingSpinner from "../ui/loading-spinner";

@@ -15,6 +15,7 @@ import {
   createInitializeMintInstruction,
   getAssociatedTokenAddress,
   createAssociatedTokenAccountInstruction,
+  MintLayout,
 } from "@solana/spl-token";
 
 export function useGetTokenAccounts({ address }: { address: PublicKey }) {
@@ -32,6 +33,27 @@ export function useGetTokenAccounts({ address }: { address: PublicKey }) {
         }),
       ]);
       return [...tokenAccounts.value, ...token2022Accounts.value];
+    },
+  });
+}
+
+export function useGetMintAuthority({ mintAddress }: { mintAddress: PublicKey }) {
+  const { connection } = useConnection();
+
+  return useQuery({
+    queryKey: ["get-mint-authority", { endpoint: connection.rpcEndpoint, mintAddress }],
+    queryFn: async () => {
+      // Fetch the account info for the mint address
+      const accountInfo = await connection.getAccountInfo(mintAddress);
+      if (!accountInfo) throw new Error("Failed to find mint account");
+
+      // Parse the account info to get the mint data
+      const mintData = MintLayout.decode(accountInfo.data);
+
+      // The mint authority is an optional field, so it could be null
+      const mintAuthority = mintData.mintAuthority ? new PublicKey(mintData.mintAuthority) : null;
+
+      return mintAuthority;
     },
   });
 }
