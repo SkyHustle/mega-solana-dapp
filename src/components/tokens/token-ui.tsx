@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useGetTokenAccounts } from "./token-data-access";
 import DataTable from "../ui/data-table";
 import LoadingSpinner from "../ui/loading-spinner";
@@ -22,12 +22,39 @@ import {
   DialogFooter,
   DialogClose,
 } from "../ui/dialog";
+import { MintLayout } from "@solana/spl-token";
+import { useConnection } from "@solana/wallet-adapter-react";
+
+const enhanceAccountsWithMintAuthority = async (accounts, connection, userAddress) => {
+  const enhancedAccounts = await Promise.all(
+    accounts.map(async (account) => {
+      const mintAddress = new PublicKey(account.account.data.parsed.info.mint);
+      const accountInfo = await connection.getAccountInfo(mintAddress);
+      if (!accountInfo) throw new Error("Failed to find mint account");
+
+      const mintData = MintLayout.decode(accountInfo.data);
+      const isMintAuthority = mintData.mintAuthority && new PublicKey(mintData.mintAuthority).equals(userAddress);
+
+      return { ...account, isMintAuthority };
+    })
+  );
+
+  return enhancedAccounts;
+};
 
 export function TokenAccounts({ address }: { address: PublicKey }) {
-  const query = useGetTokenAccounts({ address });
   const mutation = useCreateMint({ address });
+  const { data: accounts, isSuccess } = useGetTokenAccounts({ address });
+  const [enhancedAccounts, setEnhancedAccounts] = useState([]);
+  const { connection } = useConnection();
 
-  const tokenAccounts: { pubkey: PublicKey; account: AccountInfo<ParsedAccountData> }[] = query.data ?? [];
+  useEffect(() => {
+    if (isSuccess && accounts) {
+      enhanceAccountsWithMintAuthority(accounts, connection, address).then(setEnhancedAccounts);
+    }
+  }, [accounts, isSuccess, address, connection]);
+
+  console.log(`enhancedAccounts`, enhancedAccounts);
 
   function handleCreateToken() {
     mutation.mutateAsync();
@@ -39,7 +66,7 @@ export function TokenAccounts({ address }: { address: PublicKey }) {
         <div className="min-w-0 flex-1">
           <h2 className="font-bold leading-7 sm:truncate sm:text-2xl sm:tracking-tight">Token Accounts</h2>
         </div>
-        {query.isLoading ? (
+        {/* {query.isLoading ? (
           <LoadingSpinner />
         ) : (
           <div className="mt-4 flex md:ml-4 md:mt-0 gap-1">
@@ -53,7 +80,8 @@ export function TokenAccounts({ address }: { address: PublicKey }) {
         )}
         {query.isError && <pre className="">Error: {query.error?.message.toString()}</pre>}
       </div>
-      {query.isSuccess && <DataTable columns={columns} data={tokenAccounts} />}
+      {query.isSuccess && <DataTable columns={columns} data={tokenAccounts} />} */}
+      </div>
     </div>
   );
 }
