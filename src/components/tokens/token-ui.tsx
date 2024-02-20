@@ -43,6 +43,22 @@ export function TokenAccounts({ address }: { address: PublicKey }) {
 
   return (
     <div>
+      <div className="relative isolate px-6 pt-14 lg:px-8">
+        <div className="mx-auto max-w-2xl py-5 sm:py-8 lg:py-9">
+          <div className="text-center">
+            <h3 className="text-2xl font-bold tracking-tight text-primary sm:text-3xl cursor-pointer">
+              Token Playground
+            </h3>
+            <div className="mt-4 flex items-center justify-center gap-x-6">
+              <Button type="button" variant="outline" size="sm" onClick={handleCreateToken}>
+                Create Basic Token
+              </Button>
+              <CreateTokenWithMetadataModal />
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="flex items-center justify-between py-3">
         <div className="min-w-0 flex-1">
           <h2 className="font-bold leading-7 sm:truncate sm:text-2xl sm:tracking-tight">Token Accounts</h2>
@@ -51,10 +67,6 @@ export function TokenAccounts({ address }: { address: PublicKey }) {
           <LoadingSpinner />
         ) : (
           <div className="mt-4 flex md:ml-4 md:mt-0 gap-1">
-            <Button type="button" variant="outline" size="sm" onClick={handleCreateToken}>
-              Create Token
-            </Button>
-            <CreateTokenWithMetadataModal />
             <Button type="button" variant="outline" size="sm">
               <RefreshCw className="h-5 w-5" onClick={() => refetch()} />
             </Button>
