@@ -6,13 +6,14 @@ import { Button } from "../ui/button";
 import { PlusCircle, RefreshCw, CircleFadingPlus } from "lucide-react";
 import { ExplorerLink } from "../cluster/cluster-ui";
 import { ColumnDef } from "@tanstack/react-table";
-import { PublicKey, AccountInfo, ParsedAccountData, Connection } from "@solana/web3.js";
+import { PublicKey, AccountInfo, ParsedAccountData } from "@solana/web3.js";
 import { ellipsify } from "@/lib/utils";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 import { useCreateMint, useMintToken } from "./token-data-access";
-import { MintLayout } from "@solana/spl-token";
+import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip";
+import { type EnhancedAccount, enhanceAccountsWithMintAuthority } from "@/lib/utils";
 import {
   Dialog,
   DialogTrigger,
@@ -23,44 +24,6 @@ import {
   DialogFooter,
   DialogClose,
 } from "../ui/dialog";
-import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip";
-
-type EnhancedAccount = {
-  pubkey: PublicKey;
-  account: AccountInfo<ParsedAccountData>;
-  isMintAuthority: boolean;
-};
-
-type TokenAccount = {
-  pubkey: PublicKey;
-  account: AccountInfo<ParsedAccountData>;
-};
-
-async function enhanceAccountsWithMintAuthority(
-  accounts: TokenAccount[],
-  connection: Connection,
-  userAddress: PublicKey
-): Promise<EnhancedAccount[]> {
-  const enhancedAccounts = await Promise.all(
-    accounts.map(async (account) => {
-      const mintAddress = new PublicKey(account.account.data.parsed.info.mint);
-      const mintAccountInfo = await connection.getAccountInfo(mintAddress);
-      if (!mintAccountInfo) throw new Error("Failed to find mint account");
-
-      const mintData = MintLayout.decode(mintAccountInfo.data);
-      const isMintAuthority = mintData.mintAuthority && new PublicKey(mintData.mintAuthority).equals(userAddress);
-
-      // Ensure the returned object matches the EnhancedAccount type
-      return {
-        pubkey: account.pubkey,
-        account: account.account,
-        isMintAuthority,
-      };
-    })
-  );
-
-  return enhancedAccounts;
-}
 
 export function TokenAccounts({ address }: { address: PublicKey }) {
   const mutation = useCreateMint({ address });
