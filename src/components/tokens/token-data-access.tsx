@@ -1,7 +1,6 @@
 import { PublicKey, Keypair, SystemProgram, TransactionSignature, Transaction } from "@solana/web3.js";
-import { useQuery } from "@tanstack/react-query";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { ellipsify } from "@/lib/utils";
 import { useCluster } from "@/components/cluster/cluster-data-access";

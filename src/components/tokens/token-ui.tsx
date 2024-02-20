@@ -24,6 +24,7 @@ import {
   DialogFooter,
   DialogClose,
 } from "../ui/dialog";
+import { useCreateMintWithMetadata } from "./meta-token-data-access";
 
 export function TokenAccounts({ address }: { address: PublicKey }) {
   const mutation = useCreateMint({ address });
@@ -53,7 +54,7 @@ export function TokenAccounts({ address }: { address: PublicKey }) {
               <Button type="button" variant="outline" size="sm" onClick={handleCreateToken}>
                 Create Basic Token
               </Button>
-              <CreateTokenWithMetadataModal />
+              <CreateTokenWithMetadataModal address={address} />
             </div>
           </div>
         </div>
@@ -193,16 +194,23 @@ function MintTokenModal({
   );
 }
 
-function CreateTokenWithMetadataModal() {
+function CreateTokenWithMetadataModal({ address }: { address: PublicKey }) {
   const [name, setName] = useState("");
   const [symbol, setSymbol] = useState("");
-  const [decimal, setDecimal] = useState("");
+  const [decimals, setDecimals] = useState("");
   const [uri, setUri] = useState("");
 
-  const isSendDisabled = !name || !symbol || !decimal || !uri;
+  const isSendDisabled = !name || !symbol || !decimals || !uri;
+
+  const mutation = useCreateMintWithMetadata({ address });
 
   function handleSend() {
-    console.log("send");
+    mutation.mutateAsync({ name, symbol, decimals: parseFloat(decimals), uri }).then(() => {
+      setName("");
+      setSymbol("");
+      setDecimals("");
+      setUri("");
+    });
   }
 
   return (
@@ -246,17 +254,17 @@ function CreateTokenWithMetadataModal() {
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="decimal" className="text-right">
-              Decimal
+            <Label htmlFor="decimals" className="text-right">
+              Decimals
             </Label>
             <Input
               type="number"
               step="any"
-              id="decimal"
+              id="decimals"
               placeholder="up to 9 decimal places"
               className="col-span-3"
-              value={decimal}
-              onChange={(e) => setDecimal(e.target.value)}
+              value={decimals}
+              onChange={(e) => setDecimals(e.target.value)}
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
