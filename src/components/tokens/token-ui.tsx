@@ -32,30 +32,30 @@ type EnhancedAccount = {
 
 type TokenAccount = {
   pubkey: PublicKey;
-  account: AccountInfo<{
-    parsed: {
-      info: {
-        mint: string; // The mint address in string format
-      };
-    };
-  }>;
+  account: AccountInfo<ParsedAccountData>;
 };
 
 const enhanceAccountsWithMintAuthority = async (
   accounts: TokenAccount[],
   connection: Connection,
   userAddress: PublicKey
-): Promise<(TokenAccount & { isMintAuthority: boolean })[]> => {
+): Promise<EnhancedAccount[]> => {
+  // Ensure the function returns Promise<EnhancedAccount[]>
   const enhancedAccounts = await Promise.all(
     accounts.map(async (account) => {
       const mintAddress = new PublicKey(account.account.data.parsed.info.mint);
-      const accountInfo = await connection.getAccountInfo(mintAddress);
-      if (!accountInfo) throw new Error("Failed to find mint account");
+      const mintAccountInfo = await connection.getAccountInfo(mintAddress);
+      if (!mintAccountInfo) throw new Error("Failed to find mint account");
 
-      const mintData = MintLayout.decode(accountInfo.data);
+      const mintData = MintLayout.decode(mintAccountInfo.data);
       const isMintAuthority = mintData.mintAuthority && new PublicKey(mintData.mintAuthority).equals(userAddress);
 
-      return { ...account, isMintAuthority };
+      // Ensure the returned object matches the EnhancedAccount type
+      return {
+        pubkey: account.pubkey,
+        account: account.account, // Cast to the expected type
+        isMintAuthority,
+      };
     })
   );
 
