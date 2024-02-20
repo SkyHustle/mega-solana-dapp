@@ -35,12 +35,11 @@ type TokenAccount = {
   account: AccountInfo<ParsedAccountData>;
 };
 
-const enhanceAccountsWithMintAuthority = async (
+async function enhanceAccountsWithMintAuthority(
   accounts: TokenAccount[],
   connection: Connection,
   userAddress: PublicKey
-): Promise<EnhancedAccount[]> => {
-  // Ensure the function returns Promise<EnhancedAccount[]>
+): Promise<EnhancedAccount[]> {
   const enhancedAccounts = await Promise.all(
     accounts.map(async (account) => {
       const mintAddress = new PublicKey(account.account.data.parsed.info.mint);
@@ -53,14 +52,14 @@ const enhanceAccountsWithMintAuthority = async (
       // Ensure the returned object matches the EnhancedAccount type
       return {
         pubkey: account.pubkey,
-        account: account.account, // Cast to the expected type
+        account: account.account,
         isMintAuthority,
       };
     })
   );
 
   return enhancedAccounts;
-};
+}
 
 export function TokenAccounts({ address }: { address: PublicKey }) {
   const mutation = useCreateMint({ address });
