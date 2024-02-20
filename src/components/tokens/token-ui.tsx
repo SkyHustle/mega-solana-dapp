@@ -64,7 +64,7 @@ const enhanceAccountsWithMintAuthority = async (
 
 export function TokenAccounts({ address }: { address: PublicKey }) {
   const mutation = useCreateMint({ address });
-  const { data: accounts, isSuccess } = useGetTokenAccounts({ address });
+  const { data: accounts, isSuccess, isError, error, isLoading, refetch } = useGetTokenAccounts({ address });
   const [enhancedAccounts, setEnhancedAccounts] = useState<EnhancedAccount[]>([]);
   const { connection } = useConnection();
 
@@ -73,8 +73,6 @@ export function TokenAccounts({ address }: { address: PublicKey }) {
       enhanceAccountsWithMintAuthority(accounts, connection, address).then(setEnhancedAccounts);
     }
   }, [accounts, isSuccess, address, connection]);
-
-  console.log(`enhancedAccounts`, enhancedAccounts);
 
   function handleCreateToken() {
     mutation.mutateAsync();
@@ -86,7 +84,7 @@ export function TokenAccounts({ address }: { address: PublicKey }) {
         <div className="min-w-0 flex-1">
           <h2 className="font-bold leading-7 sm:truncate sm:text-2xl sm:tracking-tight">Token Accounts</h2>
         </div>
-        {/* {query.isLoading ? (
+        {isLoading ? (
           <LoadingSpinner />
         ) : (
           <div className="mt-4 flex md:ml-4 md:mt-0 gap-1">
@@ -94,19 +92,18 @@ export function TokenAccounts({ address }: { address: PublicKey }) {
               Create Token
             </Button>
             <Button type="button" variant="outline" size="sm">
-              <RefreshCw className="h-5 w-5" onClick={() => query.refetch()} />
+              <RefreshCw className="h-5 w-5" onClick={() => refetch()} />
             </Button>
           </div>
         )}
-        {query.isError && <pre className="">Error: {query.error?.message.toString()}</pre>}
+        {isError && <pre className="">Error: {error?.message.toString()}</pre>}
       </div>
-      {query.isSuccess && <DataTable columns={columns} data={tokenAccounts} />} */}
-      </div>
+      {isSuccess && <DataTable columns={columns} data={enhancedAccounts} />}
     </div>
   );
 }
 
-const columns: ColumnDef<{ pubkey: PublicKey; account: AccountInfo<ParsedAccountData> }>[] = [
+const columns: ColumnDef<{ pubkey: PublicKey; account: AccountInfo<ParsedAccountData>; isMintAuthority: boolean }>[] = [
   {
     id: "pubkey", // Unique ID for the column
     accessorKey: "pubkey", // Accessor points to the pubkey data
@@ -141,12 +138,16 @@ const columns: ColumnDef<{ pubkey: PublicKey; account: AccountInfo<ParsedAccount
     header: "Mint Tokens",
     cell: ({ row }) => {
       // Directly access the entire row data
-      const rowData = row.original;
-      const tokenAccountPublicKey: PublicKey = rowData.pubkey;
-      const accountInfo = rowData.account as AccountInfo<ParsedAccountData>;
+      const enhancedAccount = row.original;
+      const tokenAccountPublicKey: PublicKey = enhancedAccount.pubkey;
+      const accountInfo = enhancedAccount.account as AccountInfo<ParsedAccountData>;
       const mintPublicKey: PublicKey = new PublicKey(accountInfo.data.parsed.info.mint);
 
-      return <MintTokenModal tokenAccountPublicKey={tokenAccountPublicKey} mintPublicKey={mintPublicKey} />;
+      if (enhancedAccount.isMintAuthority) {
+        return <MintTokenModal tokenAccountPublicKey={tokenAccountPublicKey} mintPublicKey={mintPublicKey} />;
+      } else {
+        return <span className="text-gray-500">Not Authorized</span>;
+      }
     },
   },
 ];
