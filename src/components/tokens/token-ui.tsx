@@ -42,6 +42,8 @@ export function TokenAccounts({ address }: { address: PublicKey }) {
     mutation.mutateAsync();
   }
 
+  console.log("enhancedAccounts", enhancedAccounts);
+
   return (
     <div>
       <div className="relative isolate px-6 pt-14 lg:px-8">

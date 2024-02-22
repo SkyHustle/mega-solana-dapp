@@ -4,7 +4,14 @@ import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { ellipsify } from "@/lib/utils";
 import { useCluster } from "@/components/cluster/cluster-data-access";
-import { TOKEN_PROGRAM_ID, MINT_SIZE, createInitializeMint2Instruction } from "@solana/spl-token";
+import {
+  TOKEN_PROGRAM_ID,
+  MINT_SIZE,
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  getAssociatedTokenAddress,
+  createInitializeMint2Instruction,
+  createAssociatedTokenAccountInstruction,
+} from "@solana/spl-token";
 
 import {
   PROGRAM_ID as METADATA_PROGRAM_ID,
@@ -78,11 +85,30 @@ export function useCreateMintWithMetadata({ address }: { address: PublicKey }) {
           }
         );
 
+        // Create the associated token account for the user
+        const associatedToken = await getAssociatedTokenAddress(
+          tokenMint.publicKey,
+          address,
+          false,
+          TOKEN_PROGRAM_ID,
+          ASSOCIATED_TOKEN_PROGRAM_ID
+        );
+
+        const associatedTokenAccountInstruction = createAssociatedTokenAccountInstruction(
+          address,
+          associatedToken,
+          address,
+          tokenMint.publicKey,
+          TOKEN_PROGRAM_ID,
+          ASSOCIATED_TOKEN_PROGRAM_ID
+        );
+
         // Built transaction to send to blockchain
         const transaction = new Transaction().add(
           createMintAccountInstruction,
           initializeMintInstruction,
-          createMetadataInstruction
+          createMetadataInstruction,
+          associatedTokenAccountInstruction
         );
 
         // prompts the user to sign the transaction and submit it to the network
