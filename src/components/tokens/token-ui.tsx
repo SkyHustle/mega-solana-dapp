@@ -42,7 +42,7 @@ export function TokenAccounts({ address }: { address: PublicKey }) {
     mutation.mutateAsync();
   }
 
-  // console.log("enhancedAccounts", enhancedAccounts);
+  console.log("enhancedAccounts", enhancedAccounts);
 
   return (
     <div>
