@@ -12,6 +12,7 @@ const pages: { label: string; path: string }[] = [
   { label: "Account", path: "/account" },
   { label: "Clusters", path: "/clusters" },
   { label: "Tokens", path: "/tokens" },
+  { label: "Feeds", path: "/feeds" },
 ];
 
 export function NavBar() {
