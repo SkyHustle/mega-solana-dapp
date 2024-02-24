@@ -99,7 +99,15 @@ function ChainlinkPriceFeed() {
             const rawPrice = event.answer.toNumber();
             const decimals = 8;
             const priceInDollars = rawPrice / Math.pow(10, decimals);
-            const formattedPrice = `$${priceInDollars.toFixed(2)}`;
+
+            // format the price with commas
+            const formattedPrice = new Intl.NumberFormat("en-US", {
+              style: "currency",
+              currency: "USD",
+              // Specify the number of decimal digits
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }).format(priceInDollars);
 
             setFeedsData((currentFeeds) => {
               const updatedFeeds = [...currentFeeds];
