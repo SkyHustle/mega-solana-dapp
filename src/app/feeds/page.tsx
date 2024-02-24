@@ -1,8 +1,9 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { OCR2Feed } from "@chainlink/solana-sdk";
 import { PublicKey } from "@solana/web3.js";
 import { AnchorProvider } from "@project-serum/anchor";
+import Image from "next/image";
 
 import {
   Table,
@@ -131,7 +132,7 @@ function ChainlinkPriceFeed() {
         {feedsData.map((feed) => (
           <TableRow key={feed.name}>
             <TableCell className="font-medium">
-              <img src={feed.iconURL} alt={feed.symbol} style={{ width: 24, height: 24 }} />
+              <Image className="" alt={feed.symbol} src={feed.iconURL} width={28} height={28} priority />
             </TableCell>
             <TableCell>{feed.symbol}</TableCell>
             <TableCell>{feed.name}</TableCell>
