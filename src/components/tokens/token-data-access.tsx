@@ -36,6 +36,24 @@ export function useGetTokenAccounts({ address }: { address: PublicKey }) {
   });
 }
 
+export function useGetAccountInfo({ mintAddress }: { mintAddress: PublicKey }) {
+  const { connection } = useConnection();
+
+  return useQuery({
+    queryKey: ["get-mint-authority", { endpoint: connection.rpcEndpoint, mintAddress }],
+    queryFn: async () => {
+      // Fetch the account info for the mint address
+      const accountInfo = await connection.getAccountInfo(mintAddress);
+      if (!accountInfo) throw new Error("Failed to find mint account");
+
+      // Parse the account info to get the mint data
+      const mintData = MintLayout.decode(accountInfo.data);
+
+      return mintData;
+    },
+  });
+}
+
 export function useGetMintAuthority({ mintAddress }: { mintAddress: PublicKey }) {
   const { connection } = useConnection();
 
