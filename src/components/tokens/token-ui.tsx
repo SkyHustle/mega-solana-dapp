@@ -199,7 +199,7 @@ function MintTokenModal({
 function CreateTokenWithMetadataModal({ address }: { address: PublicKey }) {
   const [name, setName] = useState("");
   const [symbol, setSymbol] = useState("");
-  const [decimals, setDecimals] = useState("");
+  const [decimals, setDecimals] = useState("0");
   const [uri, setUri] = useState("");
 
   const isSendDisabled = !name || !symbol || !decimals || !uri;
@@ -210,7 +210,7 @@ function CreateTokenWithMetadataModal({ address }: { address: PublicKey }) {
     mutation.mutateAsync({ name, symbol, decimals: parseFloat(decimals), uri }).then(() => {
       setName("");
       setSymbol("");
-      setDecimals("");
+      setDecimals("0");
       setUri("");
     });
   }
@@ -255,7 +255,7 @@ function CreateTokenWithMetadataModal({ address }: { address: PublicKey }) {
               onChange={(e) => setSymbol(e.target.value)}
             />
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
+          {/* <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="decimals" className="text-right">
               Decimals
             </Label>
@@ -268,7 +268,7 @@ function CreateTokenWithMetadataModal({ address }: { address: PublicKey }) {
               value={decimals}
               onChange={(e) => setDecimals(e.target.value)}
             />
-          </div>
+          </div> */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="uri" className="text-right">
               Uri
