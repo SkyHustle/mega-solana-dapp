@@ -38,21 +38,21 @@ const feeds = [
     address: "669U43LNHx7LsVj95uYksnhXUfWKDsdzVqev3V4Jpw3P",
   },
   {
-    iconURL: "/chainlink.svg",
+    iconURL: "/chainlink.png",
     symbol: "LINK",
     name: "Chainlink",
     price: "",
     address: "HXoZZBWv25N4fm2vfSKnHXTeDJ31qaAcWZe3ZKeM6dQv",
   },
   {
-    iconURL: "/usdc.svg",
+    iconURL: "/usdc.png",
     symbol: "USDC",
     name: "USDC",
     price: "",
     address: "2EmfL3MqL3YHABudGNmajjCpR13NNEn9Y4LWxbDm6SwR",
   },
   {
-    iconURL: "/tether.svg",
+    iconURL: "/tether.png",
     symbol: "USDT",
     name: "Tether",
     price: "",
@@ -130,7 +130,9 @@ function ChainlinkPriceFeed() {
       <TableBody>
         {feedsData.map((feed) => (
           <TableRow key={feed.name}>
-            <TableCell className="font-medium">{feed.iconURL}</TableCell>
+            <TableCell className="font-medium">
+              <img src={feed.iconURL} alt={feed.symbol} style={{ width: 24, height: 24 }} />
+            </TableCell>
             <TableCell>{feed.symbol}</TableCell>
             <TableCell>{feed.name}</TableCell>
             <TableCell className="text-right">{feed.price}</TableCell>
