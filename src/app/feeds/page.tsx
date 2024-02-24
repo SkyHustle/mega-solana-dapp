@@ -72,6 +72,7 @@ interface FeedData {
 // Note that the Wallet object provided by the useWallet hook from @solana/wallet-adapter-react
 // is not compatible with the Wallet object that the Anchor Provider expects
 import { useConnection, useAnchorWallet } from "@solana/wallet-adapter-react";
+import LoadingSpinner from "@/components/ui/loading-spinner";
 
 function ChainlinkPriceFeed() {
   const [feedsData, setFeedsData] = useState<FeedData[]>(feeds);
@@ -136,7 +137,7 @@ function ChainlinkPriceFeed() {
             </TableCell>
             <TableCell>{feed.symbol}</TableCell>
             <TableCell>{feed.name}</TableCell>
-            <TableCell className="text-right">{feed.price}</TableCell>
+            <TableCell className="text-right">{feed.price ? feed.price : <LoadingSpinner />}</TableCell>
           </TableRow>
         ))}
       </TableBody>
