@@ -1,10 +1,12 @@
 "use client";
-import Head from "next/head";
 import Script from "next/script";
 import { useEffect, useState } from "react";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 export default function JupiterSwap() {
   const [isJupiterLoaded, setJupiterLoaded] = useState(false);
+
+  const passthroughWalletContextState = useWallet();
 
   // Define the initializeJupiter function here so it's accessible in both useEffect and onLoad
   const initializeJupiter = () => {
@@ -13,6 +15,7 @@ export default function JupiterSwap() {
         displayMode: "integrated",
         integratedTargetId: "integrated-terminal",
         endpoint: "https://api.devnet.solana.com",
+        enableWalletPassthrough: true,
         formProps: {
           fixedOutputMint: false,
         },
@@ -26,29 +29,26 @@ export default function JupiterSwap() {
     if (!isJupiterLoaded) {
       initializeJupiter();
     }
-  }, [isJupiterLoaded]); // Dependency array to ensure the effect runs only when isJupiterLoaded changes
+
+    if (window.Jupiter && window.Jupiter.syncProps) {
+      window.Jupiter.syncProps({ passthroughWalletContextState });
+    }
+  }, [isJupiterLoaded, passthroughWalletContextState]);
 
   return (
     <div>
-      <Head>
-        <title>Jupiter Swap</title>
-        <meta name="description" content="Jupiter Swap" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <main>
-        <Script
-          src="https://terminal.jup.ag/main-v2.js"
-          strategy="afterInteractive"
-          onLoad={() => {
-            // Call the initialize function once the script is loaded
-            if (!isJupiterLoaded) {
-              initializeJupiter();
-            }
-          }}
-        />
-        <h1>Jupiter Swap</h1>
-        <div id="integrated-terminal">{/* Jupiter Terminal should be initialized here */}</div>
-      </main>
+      <Script
+        src="https://terminal.jup.ag/main-v2.js"
+        strategy="afterInteractive"
+        onLoad={() => {
+          // Call the initialize function once the script is loaded
+          if (!isJupiterLoaded) {
+            initializeJupiter();
+          }
+        }}
+      />
+      <h1>Jupiter Swap</h1>
+      <div id="integrated-terminal">{/* Jupiter Terminal should be initialized here */}</div>
     </div>
   );
 }
