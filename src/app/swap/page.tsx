@@ -14,7 +14,7 @@ export default function JupiterSwap() {
       window.Jupiter.init({
         displayMode: "integrated",
         integratedTargetId: "integrated-terminal",
-        endpoint: "https://api.devnet.solana.com",
+        endpoint: "https://necessary-damp-gadget.solana-mainnet.quiknode.pro/",
         enableWalletPassthrough: true,
         formProps: {
           fixedOutputMint: false,
