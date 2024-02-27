@@ -48,7 +48,7 @@ export const defaultClusters: Cluster[] = [
   },
   {
     name: "mainnet",
-    endpoint: "https://necessary-damp-gadget.solana-mainnet.quiknode.pro/",
+    endpoint: "https://necessary-damp-gadget.solana-mainnet.quiknode.pro/fc5b7b4702382c892c962f9f7b2278eceef3cb5f/",
     network: ClusterNetwork.Mainnet,
   },
 ];

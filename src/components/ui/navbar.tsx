@@ -42,7 +42,7 @@ export function NavBar() {
                   <Image className="w-auto h-8" alt="Solana Logo" src="/solana.svg" width={46} height={46} priority />
                 </Link>
               </div>
-              <div className="hidden md:ml-3 md:flex md:space-x-8">
+              <div className="hidden md:ml-3 md:flex md:space-x-4">
                 {pages.map(({ label, path }) => (
                   <Link
                     key={path}
