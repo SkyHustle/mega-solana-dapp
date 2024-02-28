@@ -59,8 +59,7 @@ export default function JupiterSwap() {
       ) : (
         <div className="bg-background px-6 py-24 sm:py-32 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-4xl font-bold tracking-tight text-primary sm:text-6xl">Swap Only Works On Mainnet</h2>
-            <p className="mt-6 text-lg leading-8 text-gray-500">
+            <p className="mt-6 text-lg leading-8 text-yellow-500">
               Make sure your wallet is not in testnet mode and change cluster to mainnet
             </p>
           </div>
