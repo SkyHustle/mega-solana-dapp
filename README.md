@@ -29,13 +29,15 @@ This is built from scratch, loosely based on the [`create-solana-dapp`](https://
 
 
 
-## Getting Started
+### Getting Started
 
 Clone this repo, `pnpm install` dependencies, run the development server `pnpm dev`
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+
+### App Images
 
 <img width="414" alt="mega-solana-dapp-1" src="https://github.com/SkyHustle/mega-solana-dapp/assets/9903275/0f885b11-ed54-4d65-9061-10b1843b734b"><img width="414" alt="mega-solana-dapp-2" src="https://github.com/SkyHustle/mega-solana-dapp/assets/9903275/a5d680e8-9799-484b-837b-28885ccd8b8b"><img width="414" alt="mega-solana-dapp-3" src="https://github.com/SkyHustle/mega-solana-dapp/assets/9903275/ebcbbc65-3531-4bf1-b9a8-20f9ebd1206e"><img width="414" alt="mega-solana-dapp-4" src="https://github.com/SkyHustle/mega-solana-dapp/assets/9903275/41817a1b-ae71-4fa5-a3d7-225f379d24f8"><img width="414" alt="mega-solana-dapp-5" src="https://github.com/SkyHustle/mega-solana-dapp/assets/9903275/98ffba01-beb3-4e4d-b80c-cf5f04529ba4"><img width="414" alt="mega-solana-dapp-6" src="https://github.com/SkyHustle/mega-solana-dapp/assets/9903275/d973d83c-cfec-4b49-ba6c-0b59749a3b5b">
 
