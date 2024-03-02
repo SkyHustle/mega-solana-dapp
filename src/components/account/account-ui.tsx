@@ -1,5 +1,5 @@
 import { useRequestAirdrop, useGetBalance, useTransferSol, useGetSignatures } from "./account-data-access";
-import { LAMPORTS_PER_SOL, PUBLIC_KEY_LENGTH, type ConfirmedSignatureInfo } from "@solana/web3.js";
+import { LAMPORTS_PER_SOL, type ConfirmedSignatureInfo } from "@solana/web3.js";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { PublicKey } from "@solana/web3.js";
 import { useEffect, useState } from "react";
@@ -142,7 +142,7 @@ export function SendModal({ address }: { address: PublicKey }) {
   const mutation = useTransferSol({ address });
 
   useEffect(() => {
-    if (destination.length >= PUBLIC_KEY_LENGTH && parseFloat(amount) > 0) {
+    if (destination.length >= 43 && parseFloat(amount) > 0) {
       setIsSendDisabled(false);
     } else {
       setIsSendDisabled(true);
