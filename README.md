@@ -18,7 +18,7 @@ This is built from scratch, loosely based on the [`create-solana-dapp`](https://
 - create and mint basic [`spl-token`](https://spl.solana.com/token)
 - create and mint token(s) with meta-data using Metaplex [`mpl-token-metadata`](https://github.com/metaplex-foundation/mpl-token-metadata)
 - Connect to all available [Chainlink Price Feeds](https://docs.chain.link/data-feeds/solana/using-data-feeds-off-chain) and view real time price updates on devnet: SOL, BTC, ETH, LINK, USDC, USDT
-- Swap tokens using [Jupiter Terminal V2](https://terminal.jup.ag) - *only works on mainnet, you need to provide your own rpc endpoint*
+- Swap tokens using [Jupiter Terminal V2](https://terminal.jup.ag) - ${{\color{Orangered}{\textsf{  Only works on mainnet, you need to provide your own rpc endpoint\ \}}}}\$
 - change between different clusters: devnet, local, testnet, mainnet
 - view their SOL account balance
 - view their transaction history
