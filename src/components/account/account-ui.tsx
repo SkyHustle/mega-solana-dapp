@@ -25,7 +25,7 @@ import LoadingSpinner from "../ui/loading-spinner";
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 
 export function AccountBalance({ address }: { address: PublicKey }) {
-  const query = useGetBalance({ address });
+  const { data, isLoading, refetch } = useGetBalance({ address });
   const [balance, setBalance] = useState(0);
   const { connection } = useConnection();
   const { publicKey } = useWallet();
@@ -38,8 +38,8 @@ export function AccountBalance({ address }: { address: PublicKey }) {
       return;
     }
 
-    if (query.data) {
-      const initialBalance = Math.round((query.data / LAMPORTS_PER_SOL) * 100000) / 100000;
+    if (data) {
+      const initialBalance = Math.round((data / LAMPORTS_PER_SOL) * 100000) / 100000;
       console.log(`Initial balance from query: ${initialBalance} SOL`);
       setBalance(initialBalance);
     }
@@ -71,16 +71,15 @@ export function AccountBalance({ address }: { address: PublicKey }) {
         console.log("Unsubscribed from account changes");
       });
     };
-  }, [connection, publicKey, query.data]);
+  }, [connection, publicKey, data]);
 
   return (
     <div>
       <h3
         className="text-1xl font-bold tracking-tight text-primary sm:text-2xl cursor-pointer"
-        onClick={() => query.refetch()}
+        onClick={() => refetch()}
       >
-        {query.data ? Math.round((query.data / LAMPORTS_PER_SOL) * 100000) / 100000 + " SOL" : <LoadingSpinner />}
-        <span> state: {balance}</span>
+        {isLoading ? <LoadingSpinner /> : balance + " SOL"}
       </h3>
     </div>
   );
