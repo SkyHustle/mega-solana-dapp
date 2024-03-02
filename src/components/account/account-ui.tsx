@@ -38,7 +38,7 @@ export function AccountBalance({ address }: { address: PublicKey }) {
     }
 
     if (data) {
-      const initialBalance = Number((data / LAMPORTS_PER_SOL).toFixed(2));
+      const initialBalance = Number((data / LAMPORTS_PER_SOL).toFixed(3));
       setBalance(initialBalance);
     }
 
@@ -50,9 +50,9 @@ export function AccountBalance({ address }: { address: PublicKey }) {
         ACCOUNT_TO_WATCH,
         (updatedAccountInfo) => {
           console.log(`---Event Notification for ${ACCOUNT_TO_WATCH.toBase58()}---`);
-          const newBalance = updatedAccountInfo.lamports / LAMPORTS_PER_SOL;
+          const newBalance = (updatedAccountInfo.lamports / LAMPORTS_PER_SOL).toFixed(3);
           toast.success("SOL Balance Updated");
-          setBalance(newBalance);
+          setBalance(Number(newBalance));
         },
         "confirmed"
       );
