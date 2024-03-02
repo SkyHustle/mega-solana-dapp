@@ -22,9 +22,56 @@ import {
 } from "@/components/ui/dialog";
 import { formatTimeSince, ellipsify } from "@/lib/utils";
 import LoadingSpinner from "../ui/loading-spinner";
+import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 
 export function AccountBalance({ address }: { address: PublicKey }) {
   const query = useGetBalance({ address });
+  const [balance, setBalance] = useState(0);
+  const { connection } = useConnection();
+  const { publicKey } = useWallet();
+
+  useEffect(() => {
+    console.log("useEffect triggered");
+
+    if (!publicKey) {
+      console.log("Wallet is not connected");
+      return;
+    }
+
+    if (query.data) {
+      const initialBalance = Math.round((query.data / LAMPORTS_PER_SOL) * 100000) / 100000;
+      console.log(`Initial balance from query: ${initialBalance} SOL`);
+      setBalance(initialBalance);
+    }
+
+    const ACCOUNT_TO_WATCH = publicKey;
+    console.log(`Subscribing to account changes for: ${ACCOUNT_TO_WATCH.toBase58()}`);
+
+    let subscriptionId: number;
+
+    const subscribeToAccount = async () => {
+      subscriptionId = await connection.onAccountChange(
+        ACCOUNT_TO_WATCH,
+        (updatedAccountInfo) => {
+          console.log(`---Event Notification for ${ACCOUNT_TO_WATCH.toBase58()}---`);
+          const newBalance = updatedAccountInfo.lamports / LAMPORTS_PER_SOL;
+          console.log("New Account Balance:", newBalance, "SOL");
+          setBalance(newBalance);
+        },
+        "confirmed"
+      );
+      console.log("Subscription ID:", subscriptionId);
+    };
+
+    subscribeToAccount();
+
+    return () => {
+      console.log(`Unsubscribing from account changes for: ${ACCOUNT_TO_WATCH.toBase58()}`);
+      connection.removeAccountChangeListener(subscriptionId).then(() => {
+        console.log("Unsubscribed from account changes");
+      });
+    };
+  }, [connection, publicKey, query.data]);
 
   return (
     <div>
@@ -33,6 +80,7 @@ export function AccountBalance({ address }: { address: PublicKey }) {
         onClick={() => query.refetch()}
       >
         {query.data ? Math.round((query.data / LAMPORTS_PER_SOL) * 100000) / 100000 + " SOL" : <LoadingSpinner />}
+        <span> state: {balance}</span>
       </h3>
     </div>
   );
