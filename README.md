@@ -9,6 +9,7 @@ This is built from scratch, loosely based on the [`create-solana-dapp`](https://
    - dialogs/modals
    - light/dark/system mode toggle
 - responsive across different screen sizes
+- Event listener for changes in SOL balance
 - token creation and minting
 - live Chainlink price feeds
 - token swap on mainnet using Jupiter Terminal
