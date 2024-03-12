@@ -14,6 +14,7 @@ const pages: { label: string; path: string }[] = [
   { label: "Tokens", path: "/tokens" },
   { label: "Feeds", path: "/feeds" },
   { label: "Swap", path: "/swap" },
+  { label: "Pools", path: "/pools" },
 ];
 
 export function NavBar() {
