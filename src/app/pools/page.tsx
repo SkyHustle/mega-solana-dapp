@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 const ClientComponent = () => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -15,12 +15,17 @@ const ClientComponent = () => {
         if (response.ok) {
           setData(data);
         } else {
-          setError(data.error);
+          setError(new Error(data.error));
         }
       } catch (error) {
-        setError(error.message);
+        if (error instanceof Error) {
+          setError(error);
+        } else {
+          setError(new Error("An unknown error occurred"));
+        }
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
     fetchData();
@@ -31,7 +36,7 @@ const ClientComponent = () => {
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div>Error: {error.message}</div>;
   }
 
   if (!data) {
