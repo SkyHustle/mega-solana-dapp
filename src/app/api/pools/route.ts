@@ -61,7 +61,9 @@ export async function GET(request: Request) {
     // Setup client
     // ----------------------
     console.log("--> Setting up client");
-    const rpcEndpoint = process.env.RPC_ENDPOINT || "https://rpc-public.hellomoon.io";
+    const rpcEndpoint = "https://rpc-public.hellomoon.io";
+    //   const rpcEndpoint = "https://api.mainnet-beta.solana.com";
+    //   const rpcEndpoint = process.env.RPC_ENDPOINT;
     const connection = new Connection(rpcEndpoint, "confirmed");
     const clientConfig = await getConfig("production");
     const client = await MarginfiClient.fetch(clientConfig, {} as any, connection);
@@ -69,8 +71,8 @@ export async function GET(request: Request) {
     // ----------------------
     // Banks snapshot
     // ----------------------
-    console.log("--> Generating banks snapshot");
     const bankMetadataMap = await loadBankMetadatas();
+
     const banksRaw = [...client.group.banks.values()];
     const banksShaped = banksRaw.map((bank) => {
       const bankAddress = bank.publicKey.toBase58();
