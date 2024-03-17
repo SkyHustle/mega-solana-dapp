@@ -1,8 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
+import { BankSnapshot, UserAccountSnapshot } from "@/lib/marginfi-utils";
+
+interface Data {
+  banksShaped: BankSnapshot[];
+  userAccountsShaped: UserAccountSnapshot[];
+}
 
 const ClientComponent = () => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<Data | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
