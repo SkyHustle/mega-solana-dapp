@@ -37,10 +37,11 @@ export async function GET(request: Request) {
     console.log("--> Generating sample wallet snapshot");
     const SAMPLE_WALLET = new PublicKey("FHsALmky5sQLUx6CrjWRLRfc4WQYjv4ecmWML3eLLAB1");
     const marginfiAccounts = await client.getMarginfiAccountsForAuthority(SAMPLE_WALLET);
-    const userAccountsShaped = marginfiAccounts.map((account) => shapeUserAccount(account, banksRaw, bankMetadataMap));
+    // const userAccountsShaped = marginfiAccounts.map((account) => shapeUserAccount(account, banksRaw, bankMetadataMap));
 
     // Return the data as a JSON response
-    return NextResponse.json({ banksShaped, userAccountsShaped });
+    // return NextResponse.json({ banksShaped, userAccountsShaped });
+    return NextResponse.json(banksShaped);
   } catch (error) {
     console.error("Error fetching data:", error);
     if (error instanceof Error) {
