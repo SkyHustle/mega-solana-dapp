@@ -27,8 +27,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { RiskTier } from "@mrgnlabs/marginfi-client-v2";
 
-const dummyData = [
+// interface Data {
+//   banksShaped: BankSnapshot[];
+//   userAccountsShaped: UserAccountSnapshot[];
+// }
+
+const dummyData: BankSnapshot[] = [
   {
     tokenSymbol: "BLZE",
     tokenName: "Blaze",
@@ -41,7 +47,7 @@ const dummyData = [
     totalBorrows: 61287412.27977576,
     totalDepositsUsdValue: 1053459.3982783784,
     totalBorrowsUsdValue: 86217.51345745844,
-    riskTier: "Isolated",
+    riskTier: "Isolated" as RiskTier,
   },
   {
     tokenSymbol: "RENDER",
@@ -55,7 +61,7 @@ const dummyData = [
     totalBorrows: 4173.338457444093,
     totalDepositsUsdValue: 6396568.0086644655,
     totalBorrowsUsdValue: 55434.64764398824,
-    riskTier: "Isolated",
+    riskTier: "Isolated" as RiskTier,
   },
   {
     tokenSymbol: "bSOL",
@@ -69,7 +75,7 @@ const dummyData = [
     totalBorrows: 39145.72610150169,
     totalDepositsUsdValue: 85708961.3991947,
     totalBorrowsUsdValue: 8444764.248287894,
-    riskTier: "Collateral",
+    riskTier: "Collateral" as RiskTier,
   },
   {
     tokenSymbol: "wstETH",
@@ -83,7 +89,7 @@ const dummyData = [
     totalBorrows: 0.5842320072159554,
     totalDepositsUsdValue: 612254.3839720436,
     totalBorrowsUsdValue: 2439.794028119078,
-    riskTier: "Isolated",
+    riskTier: "Isolated" as RiskTier,
   },
   {
     tokenSymbol: "WBTC",
@@ -97,7 +103,7 @@ const dummyData = [
     totalBorrows: 9.448975232710284,
     totalDepositsUsdValue: 15142321.609969193,
     totalBorrowsUsdValue: 651047.8057256909,
-    riskTier: "Collateral",
+    riskTier: "Collateral" as RiskTier,
   },
 ];
 
@@ -132,6 +138,12 @@ const data: Payment[] = [
     status: "failed",
     email: "carmella@hotmail.com",
   },
+  {
+    id: "bhqecj4p8jkl",
+    amount: 21,
+    status: "pending",
+    email: "blaze@hotmail.com",
+  },
 ];
 
 type Payment = {
@@ -141,90 +153,85 @@ type Payment = {
   email: string;
 };
 
-// interface Data {
-//   banksShaped: BankSnapshot[];
-//   userAccountsShaped: UserAccountSnapshot[];
-// }
+const columns: ColumnDef<BankSnapshot>[] = [
+  // {
+  //   id: "select",
+  //   header: ({ table }) => (
+  //     <Checkbox
+  //       checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
+  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+  //       aria-label="Select all"
+  //     />
+  //   ),
+  //   cell: ({ row }) => (
+  //     <Checkbox
+  //       checked={row.getIsSelected()}
+  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
+  //       aria-label="Select row"
+  //     />
+  //   ),
+  //   enableSorting: false,
+  //   enableHiding: false,
+  // },
+  {
+    accessorKey: "tokenSymbol",
+    header: "Asset",
+    cell: ({ row }) => <div className="capitalize">{row.getValue("tokenSymbol")}</div>,
+  },
+  // {
+  //   accessorKey: "email",
+  //   header: ({ column }) => {
+  //     return (
+  //       <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+  //         Email
+  //         <ArrowUpDown className="ml-2 h-4 w-4" />
+  //       </Button>
+  //     );
+  //   },
+  //   cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+  // },
+  // {
+  //   accessorKey: "amount",
+  //   header: () => <div className="text-right">Amount</div>,
+  //   cell: ({ row }) => {
+  //     const amount = parseFloat(row.getValue("amount"));
 
-const columns: ColumnDef<Payment>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("status")}</div>,
-  },
-  {
-    accessorKey: "email",
-    header: ({ column }) => {
-      return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-          Email
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
-  },
-  {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
+  //     // Format the amount as a dollar amount
+  //     const formatted = new Intl.NumberFormat("en-US", {
+  //       style: "currency",
+  //       currency: "USD",
+  //     }).format(amount);
 
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount);
+  //     return <div className="text-right font-medium">{formatted}</div>;
+  //   },
+  // },
+  // {
+  //   id: "actions",
+  //   enableHiding: false,
+  //   cell: ({ row }) => {
+  //     const payment = row.original;
 
-      return <div className="text-right font-medium">{formatted}</div>;
-    },
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const payment = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
+  //     return (
+  //       <DropdownMenu>
+  //         <DropdownMenuTrigger asChild>
+  //           <Button variant="ghost" className="h-8 w-8 p-0">
+  //             <span className="sr-only">Open menu</span>
+  //             <MoreHorizontal className="h-4 w-4" />
+  //           </Button>
+  //         </DropdownMenuTrigger>
+  //         <DropdownMenuContent align="end">
+  //           <DropdownMenuLabel>Actions</DropdownMenuLabel>
+  //           <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>
+  //             Copy payment ID
+  //           </DropdownMenuItem>
+  //           <DropdownMenuSeparator />
+  //           <DropdownMenuItem>View customer</DropdownMenuItem>
+  //           <DropdownMenuItem>View payment details</DropdownMenuItem>
+  //         </DropdownMenuContent>
+  //       </DropdownMenu>
+  //     );
+  //   },
+  // },
 ];
 
 export default function DataTableDemo() {
@@ -234,7 +241,7 @@ export default function DataTableDemo() {
   const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({
-    data,
+    data: dummyData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
