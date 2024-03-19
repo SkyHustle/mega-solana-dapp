@@ -80,7 +80,7 @@ const dummyData = [
 //   userAccountsShaped: UserAccountSnapshot[];
 // }
 
-const ClientComponent = () => {
+function Pools() {
   // const [data, setData] = useState<Data | null>(dummyData);
   const [data, setData] = useState(dummyData);
   const [isLoading, setIsLoading] = useState(false);
@@ -133,15 +133,8 @@ const ClientComponent = () => {
           <pre>{JSON.stringify(bank, null, 2)}</pre>
         </div>
       ))}
-
-      {/* <h2>User Accounts</h2>
-      {userAccountsShaped.map((account, index) => (
-        <div key={index}>
-          <pre>{JSON.stringify(account, null, 2)}</pre>
-        </div>
-      ))} */}
     </div>
   );
-};
+}
 
-export default ClientComponent;
+export default Pools;
