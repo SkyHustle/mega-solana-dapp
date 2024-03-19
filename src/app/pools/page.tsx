@@ -154,42 +154,47 @@ type Payment = {
 };
 
 const columns: ColumnDef<BankSnapshot>[] = [
-  // {
-  //   id: "select",
-  //   header: ({ table }) => (
-  //     <Checkbox
-  //       checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
-  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-  //       aria-label="Select all"
-  //     />
-  //   ),
-  //   cell: ({ row }) => (
-  //     <Checkbox
-  //       checked={row.getIsSelected()}
-  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
-  //       aria-label="Select row"
-  //     />
-  //   ),
-  //   enableSorting: false,
-  //   enableHiding: false,
-  // },
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "tokenSymbol",
     header: "Asset",
     cell: ({ row }) => <div className="capitalize">{row.getValue("tokenSymbol")}</div>,
   },
-  // {
-  //   accessorKey: "email",
-  //   header: ({ column }) => {
-  //     return (
-  //       <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-  //         Email
-  //         <ArrowUpDown className="ml-2 h-4 w-4" />
-  //       </Button>
-  //     );
-  //   },
-  //   cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
-  // },
+  {
+    accessorKey: "price",
+    header: "Price",
+    cell: ({ row }) => <div className="capitalize">price</div>,
+  },
+  {
+    accessorKey: "lendingRate",
+    header: ({ column }) => {
+      return (
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+          Lend APY
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div className="lowercase">{formatPercentage(row.getValue("lendingRate"))}</div>,
+  },
   // {
   //   accessorKey: "amount",
   //   header: () => <div className="text-right">Amount</div>,
@@ -348,6 +353,17 @@ export default function DataTableDemo() {
       </div>
     </div>
   );
+}
+
+// Helper function to format percentage
+function formatPercentage(value: string): string {
+  const numericValue = parseFloat(value);
+
+  // Round up if the third decimal digit is >= 5
+  const roundedValue = Math.round(numericValue * 100) / 100;
+
+  // Format with two decimal places and append the percentage symbol
+  return `${roundedValue.toFixed(2)}%`;
 }
 
 // function Pools() {
