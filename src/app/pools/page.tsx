@@ -28,6 +28,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { RiskTier } from "@mrgnlabs/marginfi-client-v2";
+import { formatPercentage } from "@/lib/utils";
 
 // interface Data {
 //   banksShaped: BankSnapshot[];
@@ -92,17 +93,17 @@ const dummyData: BankSnapshot[] = [
     riskTier: "Isolated" as RiskTier,
   },
   {
-    tokenSymbol: "WBTC",
-    tokenName: "Wrapped BTC (Portal)",
-    bankAddress: "BKsfDJCMbYep6gr9pq8PsmJbb5XGLHbAJzUV8vmorz7a",
-    lendingRate: 0.022364559305303146,
-    borrowingRate: 5.53401880757313,
-    totalDepositsNative: "22338784818.2947575659511895820283258828",
-    totalBorrowsNative: "944897523.271028461197760548892801446854",
-    totalDeposits: 223.38784818294758,
-    totalBorrows: 9.448975232710284,
-    totalDepositsUsdValue: 15142321.609969193,
-    totalBorrowsUsdValue: 651047.8057256909,
+    tokenSymbol: "USDC",
+    tokenName: "USD Coin",
+    bankAddress: "2s37akK2eyBbp8DZgCm7RtsaEz8eJP3Nxd4urLHQv7yB",
+    lendingRate: 10.870296344280453,
+    borrowingRate: 17.894757254134976,
+    totalDepositsNative: "100612841269693.9233330642985632893921962",
+    totalBorrowsNative: "85664917367391.6943107154963547905720718",
+    totalDeposits: 100612841.26969393,
+    totalBorrows: 85664917.36739169,
+    totalDepositsUsdValue: 100613836.33069408,
+    totalBorrowsUsdValue: 92718622.14253138,
     riskTier: "Collateral" as RiskTier,
   },
 ];
@@ -193,7 +194,19 @@ const columns: ColumnDef<BankSnapshot>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div className="lowercase">{formatPercentage(row.getValue("lendingRate"))}</div>,
+    cell: ({ row }) => formatPercentage(row.getValue("lendingRate")),
+  },
+  {
+    accessorKey: "borrowingRate",
+    header: ({ column }) => {
+      return (
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+          Borrow APY
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => formatPercentage(row.getValue("borrowingRate")),
   },
   // {
   //   accessorKey: "amount",
@@ -353,17 +366,6 @@ export default function DataTableDemo() {
       </div>
     </div>
   );
-}
-
-// Helper function to format percentage
-function formatPercentage(value: string): string {
-  const numericValue = parseFloat(value);
-
-  // Round up if the third decimal digit is >= 5
-  const roundedValue = Math.round(numericValue * 100) / 100;
-
-  // Format with two decimal places and append the percentage symbol
-  return `${roundedValue.toFixed(2)}%`;
 }
 
 // function Pools() {
