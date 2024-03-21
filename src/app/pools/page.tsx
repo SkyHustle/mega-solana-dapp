@@ -29,6 +29,7 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { RiskTier } from "@mrgnlabs/marginfi-client-v2";
 import { formatPercentage } from "@/lib/utils";
+import LoadingSpinner from "@/components/ui/loading-spinner";
 
 // interface Data {
 //   banksShaped: BankSnapshot[];
@@ -289,16 +290,8 @@ export default function Pools() {
     },
   });
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   if (error) {
     return <div>Error: {error.message}</div>;
-  }
-
-  if (!data) {
-    return <div>No data available</div>;
   }
 
   // Accessing current page index and total page count
@@ -366,7 +359,7 @@ export default function Pools() {
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
+                  <LoadingSpinner />
                 </TableCell>
               </TableRow>
             )}
