@@ -131,34 +131,34 @@ type Payment = {
 };
 
 const columns: ColumnDef<BankSnapshot>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
+  // {
+  //   id: "select",
+  //   header: ({ table }) => (
+  //     <Checkbox
+  //       checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
+  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+  //       aria-label="Select all"
+  //     />
+  //   ),
+  //   cell: ({ row }) => (
+  //     <Checkbox
+  //       checked={row.getIsSelected()}
+  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
+  //       aria-label="Select row"
+  //     />
+  //   ),
+  //   enableSorting: false,
+  //   enableHiding: false,
+  // },
   {
     accessorKey: "tokenSymbol",
     header: "Asset",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("tokenSymbol")}</div>,
+    cell: ({ row }) => row.getValue("tokenSymbol"),
   },
   {
     accessorKey: "price",
     header: "Price",
-    cell: ({ row }) => <div className="capitalize">price</div>,
+    cell: ({ row }) => "price",
   },
   {
     accessorKey: "lendingRate",
@@ -185,12 +185,25 @@ const columns: ColumnDef<BankSnapshot>[] = [
     cell: ({ row }) => formatPercentage(row.getValue("borrowingRate")),
   },
   {
-    header: "Utilization",
-    cell: ({ row }) => ((row.original.totalBorrows / row.original.totalDeposits) * 100).toFixed(2) + "%",
+    accessorKey: "totalBorrowsUsdValue",
+    header: "Total Borrrows",
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("totalBorrowsUsdValue"));
+
+      // Format the amount as a dollar amount without decimal places
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(amount);
+
+      return formatted;
+    },
   },
   {
     accessorKey: "totalDepositsUsdValue",
-    header: () => <div className="text-right">Total Deposits</div>,
+    header: "Total Deposits",
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("totalDepositsUsdValue"));
 
@@ -198,10 +211,16 @@ const columns: ColumnDef<BankSnapshot>[] = [
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
       }).format(amount);
 
-      return <div className="text-right font-medium">{formatted}</div>;
+      return formatted;
     },
+  },
+  {
+    header: "Utilization",
+    cell: ({ row }) => ((row.original.totalBorrows / row.original.totalDeposits) * 100).toFixed(2) + "%",
   },
   // {
   //   id: "actions",
