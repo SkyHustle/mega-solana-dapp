@@ -108,28 +108,6 @@ const dummyData: BankSnapshot[] = [
   },
 ];
 
-const data: Payment[] = [
-  {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@yahoo.com",
-  },
-  {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@gmail.com",
-  },
-];
-
-type Payment = {
-  id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
-};
-
 const columns: ColumnDef<BankSnapshot>[] = [
   // {
   //   id: "select",
@@ -251,7 +229,7 @@ const columns: ColumnDef<BankSnapshot>[] = [
   // },
 ];
 
-export default function DataTableDemo() {
+export default function Pools() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});

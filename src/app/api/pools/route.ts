@@ -14,6 +14,7 @@ export async function GET(request: Request) {
     const bankMetadataMap = await loadBankMetadatas();
 
     const banksRaw = [...client.group.banks.values()];
+    console.log("banksRaw -------------->", banksRaw);
     const banksShaped = banksRaw.map((bank) => {
       const bankAddress = bank.publicKey.toBase58();
       const bankMetadata = bankMetadataMap[bankAddress];
