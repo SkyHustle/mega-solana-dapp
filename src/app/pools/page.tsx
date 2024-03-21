@@ -188,21 +188,21 @@ const columns: ColumnDef<BankSnapshot>[] = [
     header: "Utilization",
     cell: ({ row }) => ((row.original.totalBorrows / row.original.totalDeposits) * 100).toFixed(2) + "%",
   },
-  // {
-  //   accessorKey: "amount",
-  //   header: () => <div className="text-right">Amount</div>,
-  //   cell: ({ row }) => {
-  //     const amount = parseFloat(row.getValue("amount"));
+  {
+    accessorKey: "totalDepositsUsdValue",
+    header: () => <div className="text-right">Total Deposits</div>,
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("totalDepositsUsdValue"));
 
-  //     // Format the amount as a dollar amount
-  //     const formatted = new Intl.NumberFormat("en-US", {
-  //       style: "currency",
-  //       currency: "USD",
-  //     }).format(amount);
+      // Format the amount as a dollar amount
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(amount);
 
-  //     return <div className="text-right font-medium">{formatted}</div>;
-  //   },
-  // },
+      return <div className="text-right font-medium">{formatted}</div>;
+    },
+  },
   // {
   //   id: "actions",
   //   enableHiding: false,
