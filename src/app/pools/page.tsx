@@ -235,8 +235,38 @@ export default function Pools() {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
+  // const [data, setData] = useState<Data | null>(dummyData);
+  const [data, setData] = useState<BankSnapshot[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch("/api/pools");
+        const data = await response.json();
+        if (response.ok) {
+          setData(data);
+        } else {
+          setError(new Error(data.error));
+        }
+      } catch (error) {
+        if (error instanceof Error) {
+          setError(error);
+        } else {
+          setError(new Error("An unknown error occurred"));
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const table = useReactTable({
-    data: dummyData,
+    data,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -253,6 +283,18 @@ export default function Pools() {
       rowSelection,
     },
   });
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  if (!data) {
+    return <div>No data available</div>;
+  }
 
   return (
     <div className="w-full">
@@ -344,62 +386,3 @@ export default function Pools() {
     </div>
   );
 }
-
-// function Pools() {
-//   // const [data, setData] = useState<Data | null>(dummyData);
-//   const [data, setData] = useState(dummyData);
-//   const [isLoading, setIsLoading] = useState(false);
-//   const [error, setError] = useState<Error | null>(null);
-
-//   // useEffect(() => {
-//   //   const fetchData = async () => {
-//   //     setIsLoading(true);
-//   //     try {
-//   //       const response = await fetch("/api/pools");
-//   //       const data = await response.json();
-//   //       if (response.ok) {
-//   //         setData(data);
-//   //       } else {
-//   //         setError(new Error(data.error));
-//   //       }
-//   //     } catch (error) {
-//   //       if (error instanceof Error) {
-//   //         setError(error);
-//   //       } else {
-//   //         setError(new Error("An unknown error occurred"));
-//   //       }
-//   //     } finally {
-//   //       setIsLoading(false);
-//   //     }
-//   //   };
-
-//   //   fetchData();
-//   // }, []);
-
-//   if (isLoading) {
-//     return <div>Loading...</div>;
-//   }
-
-//   if (error) {
-//     return <div>Error: {error.message}</div>;
-//   }
-
-//   if (!data) {
-//     return <div>No data available</div>;
-//   }
-
-//   // const { banksShaped, userAccountsShaped } = data;
-
-//   return (
-//     <div>
-//       <h2>Banks</h2>
-//       {data.map((bank, index) => (
-//         <div key={index}>
-//           <pre>{JSON.stringify(bank, null, 2)}</pre>
-//         </div>
-//       ))}
-//     </div>
-//   );
-// }
-
-// export default Pools;
