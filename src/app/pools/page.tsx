@@ -280,9 +280,9 @@ export default function DataTableDemo() {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-          onChange={(event) => table.getColumn("email")?.setFilterValue(event.target.value)}
+          placeholder="Filter assets..."
+          value={(table.getColumn("tokenSymbol")?.getFilterValue() as string) ?? ""}
+          onChange={(event) => table.getColumn("tokenSymbol")?.setFilterValue(event.target.value)}
           className="max-w-sm"
         />
         <DropdownMenu>
