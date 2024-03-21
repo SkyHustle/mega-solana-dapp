@@ -121,30 +121,6 @@ const data: Payment[] = [
     status: "success",
     email: "Abe45@gmail.com",
   },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@gmail.com",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    email: "Silas22@gmail.com",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    email: "carmella@hotmail.com",
-  },
-  {
-    id: "bhqecj4p8jkl",
-    amount: 21,
-    status: "pending",
-    email: "blaze@hotmail.com",
-  },
 ];
 
 type Payment = {
@@ -188,7 +164,7 @@ const columns: ColumnDef<BankSnapshot>[] = [
     accessorKey: "lendingRate",
     header: ({ column }) => {
       return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+        <Button className="pl-0" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Lend APY
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
@@ -200,13 +176,17 @@ const columns: ColumnDef<BankSnapshot>[] = [
     accessorKey: "borrowingRate",
     header: ({ column }) => {
       return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+        <Button className="pl-0" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Borrow APY
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
     cell: ({ row }) => formatPercentage(row.getValue("borrowingRate")),
+  },
+  {
+    header: "Utilization",
+    cell: ({ row }) => ((row.original.totalBorrows / row.original.totalDeposits) * 100).toFixed(2) + "%",
   },
   // {
   //   accessorKey: "amount",
