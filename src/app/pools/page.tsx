@@ -282,6 +282,11 @@ export default function Pools() {
       columnVisibility,
       rowSelection,
     },
+    initialState: {
+      pagination: {
+        pageSize: 10,
+      },
+    },
   });
 
   if (isLoading) {
@@ -295,6 +300,10 @@ export default function Pools() {
   if (!data) {
     return <div>No data available</div>;
   }
+
+  // Accessing current page index and total page count
+  const currentPage = table.getState().pagination.pageIndex + 1; // Adding 1 to make it human-readable (1-based instead of 0-based)
+  const totalPages = table.getPageCount();
 
   return (
     <div className="w-full">
@@ -369,6 +378,9 @@ export default function Pools() {
           {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s)
           selected.
         </div> */}
+        <div className="text-sm">
+          Page {currentPage} of {totalPages}
+        </div>
         <div className="space-x-2">
           <Button
             variant="outline"
