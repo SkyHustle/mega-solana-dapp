@@ -39,6 +39,7 @@ import LoadingSpinner from "@/components/ui/loading-spinner";
 const dummyData: BankSnapshot[] = [
   {
     tokenSymbol: "BLZE",
+    tokenPrice: 1.82,
     tokenName: "Blaze",
     bankAddress: "6Fk3bzhqmUqupk6sN5CbfYMdafvyzDdqDNHW5CsJzq8K",
     lendingRate: 0.08327364146415393,
@@ -53,6 +54,7 @@ const dummyData: BankSnapshot[] = [
   },
   {
     tokenSymbol: "RENDER",
+    tokenPrice: 1.82,
     tokenName: "Render Token",
     bankAddress: "EbuSnXdFz1R4VPdaJ96KQQQmeYgZTHSzpNW94Tw1PE3H",
     lendingRate: 0.000937377902475624,
@@ -67,6 +69,7 @@ const dummyData: BankSnapshot[] = [
   },
   {
     tokenSymbol: "bSOL",
+    tokenPrice: 1.82,
     tokenName: "BlazeStake Staked SOL (bSOL)",
     bankAddress: "6hS9i46WyTq1KXcoa2Chas2Txh9TJAVr6n1t3tnrE23K",
     lendingRate: 0.1198062286516877,
@@ -81,6 +84,7 @@ const dummyData: BankSnapshot[] = [
   },
   {
     tokenSymbol: "wstETH",
+    tokenPrice: 1.82,
     tokenName: "Lido Wrapped Staked ETH",
     bankAddress: "9g3Tug2WbDwekghbPn2u3V84tvikAMBZiFbPUfkjwKNH",
     lendingRate: 0.00019778373537858242,
@@ -95,6 +99,7 @@ const dummyData: BankSnapshot[] = [
   },
   {
     tokenSymbol: "USDC",
+    tokenPrice: 1.82,
     tokenName: "USD Coin",
     bankAddress: "2s37akK2eyBbp8DZgCm7RtsaEz8eJP3Nxd4urLHQv7yB",
     lendingRate: 10.870296344280453,
@@ -135,9 +140,17 @@ const columns: ColumnDef<BankSnapshot>[] = [
     cell: ({ row }) => row.getValue("tokenSymbol"),
   },
   {
-    accessorKey: "price",
-    header: "Price",
-    cell: ({ row }) => "price",
+    accessorKey: "tokenPrice",
+    header: "Total Deposits",
+    cell: ({ row }) => {
+      // Format the amount as a dollar amount
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(row.getValue("tokenPrice"));
+
+      return formatted;
+    },
   },
   {
     accessorKey: "lendingRate",
