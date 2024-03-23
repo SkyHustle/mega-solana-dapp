@@ -13,6 +13,7 @@ This is built from scratch, loosely based on the [`create-solana-dapp`](https://
 - token creation and minting
 - live Chainlink price feeds
 - token swap on mainnet using Jupiter Terminal
+- View all [`marginFi`](https://app.marginfi.com/) lending pools with associated info(APY, size, utilization)
 
 ### Users are able to
 - connect to the app with their crypto wallet using [solana wallet adapter](https://github.com/anza-xyz/wallet-adapter)
@@ -27,6 +28,7 @@ This is built from scratch, loosely based on the [`create-solana-dapp`](https://
 - request an airdrop on devnet
 - send SOL
 - copy their address to clipboard to request SOL
+- filter marginFi pools by token name, sort by lend/borrow APY
 
 
 
